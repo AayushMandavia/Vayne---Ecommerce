@@ -206,7 +206,7 @@ export default function ShopPreloader({ onComplete }: ShopPreloaderProps) {
                   src={card.src}
                   alt={card.title}
                   draggable={false}
-                  className="w-full h-full object-contain p-2 sm:p-3 select-none pointer-events-none bg-white"
+                  className="w-full h-full object-cover select-none pointer-events-none"
                 />
               </div>
             );
