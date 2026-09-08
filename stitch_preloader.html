@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VAYNE - Preloader Animation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background-color: #000000;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    
+    .tracking-luxury {
+      letter-spacing: 0.55em;
+    }
+    
+    .tracking-subtle {
+      letter-spacing: 0.32em;
+    }
+
+    /* Crisp stroke and glowing bloom */
+    .glow-stroke {
+      filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.45)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+    }
+    
+    .glow-dot {
+      filter: drop-shadow(0 0 5px #ffffff) drop-shadow(0 0 12px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 24px rgba(255, 255, 255, 0.5));
+    }
+
+    /* Subtle grid background to match the minimalist studio look */
+    .subtle-grid {
+      background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+    }
+
+    /* Breathing subtle pulse during hold */
+    @keyframes subtlePulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 14px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 30px rgba(255, 255, 255, 0.2));
+        transform: scale(1);
+      }
+      50% {
+        filter: drop-shadow(0 0 6px rgba(255, 255, 255, 1)) drop-shadow(0 0 18px rgba(255, 255, 255, 0.65)) drop-shadow(0 0 36px rgba(255, 255, 255, 0.35));
+        transform: scale(1.006);
+      }
+    }
+    .tshirt-hold {
+      animation: subtlePulse 2.2s ease-in-out infinite;
+      transform-origin: 500px 140px;
+    }
+  </style>
+</head>
+<body class="bg-black text-white min-h-screen flex flex-col justify-between selection:bg-white selection:text-black relative subtle-grid">
+<!-- Top Navigation / Header -->
+<header class="w-full px-10 py-9 flex justify-between items-center z-20">
+<div class="flex items-center">
+<span class="text-xl md:text-2xl font-bold tracking-luxury uppercase pl-1 text-white select-none">V A Y N E</span>
+</div>
+<div class="text-[10px] md:text-[11px] font-normal text-neutral-400 tracking-subtle uppercase select-none">
+      CLOTHING FOR WHAT'S NEXT
+    </div>
+</header>
+<!-- Main Animation Canvas Centerpiece -->
+<main class="flex-1 flex flex-col items-center justify-center relative px-4 py-2 w-full max-w-7xl mx-auto">
+<!-- Stage Canvas -->
+<div class="w-full relative flex flex-col items-center justify-center my-auto min-h-[360px]">
+<!-- Stage Visual Canvas (SVG) - 1000x280 Coordinate Space -->
+<div class="w-full h-64 md:h-72 relative flex items-center justify-center">
+<svg class="w-full h-full max-w-4xl overflow-visible" id="stageSvg" viewbox="0 0 1000 280">
+<!-- Dynamic Stroke Path -->
+<path class="glow-stroke transition-opacity duration-300" d="M 50,140 L 460,140" fill="none" id="mainPath" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Arrow Head Polyline (for frame 02 & 07 chevron) -->
+<polyline class="glow-stroke transition-opacity duration-200 opacity-0" fill="none" id="arrowHead" points="444,124 468,140 444,156" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></polyline>
+<!-- Glowing Head Point Dot (for frame 01 & 08 dot) -->
+<circle class="glow-dot opacity-100" cx="460" cy="140" fill="#ffffff" id="headDot" r="4.5"></circle>
+</svg>
+</div>
+<!-- Current Step Status Display (Exactly as in storyboard) -->
+<div class="mt-8 flex flex-col items-center text-center space-y-1 select-none">
+<div class="text-xs font-mono text-neutral-400 tracking-widest uppercase" id="stepNum">01</div>
+<div class="text-xs md:text-sm tracking-subtle uppercase text-neutral-300 font-medium min-h-[1.5rem]" id="stepDesc">Line enters</div>
+</div>
+</div>
+<!-- Interactive Step Timeline Indicator -->
+<div class="w-full max-w-4xl px-4 mt-4 mb-2">
+<div class="grid grid-cols-4 md:grid-cols-8 gap-2.5 border-t border-neutral-900 pt-6">
+<!-- 01 Line enters -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(0)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">01</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Line enters</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 02 Becomes arrow -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(1)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">02</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Becomes arrow</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 03 Transforms -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(2)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">03</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Transforms</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 04 Becomes t-shirt -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(3)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">04</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Becomes t-shirt</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 05 Holds for a moment -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(4)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">05</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Holds for a moment</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 06 Transforms back -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(5)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">06</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Transforms back</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 07 Becomes arrow -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(6)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">07</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Becomes arrow</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+<!-- 08 Continues and fades -->
+<button class="step-card group text-left p-3 rounded border border-white/10 hover:border-white/30 transition-all bg-white/[0.02]" onclick="jumpToStep(7)">
+<div class="text-[10px] font-mono text-neutral-500 group-hover:text-neutral-300">08</div>
+<div class="text-[11px] text-neutral-400 truncate mt-1 group-hover:text-white font-medium">Continues &amp; fades</div>
+<div class="step-bar h-[2px] w-0 bg-white mt-2.5 transition-all duration-300"></div>
+</button>
+</div>
+<!-- Playback Controls and Speed selection -->
+<div class="flex items-center justify-between mt-6 text-xs text-neutral-400 select-none">
+<div class="flex items-center space-x-3">
+<button class="px-4 py-2 rounded border border-white/20 hover:border-white text-white transition-all flex items-center space-x-2 bg-white/5 cursor-pointer" id="playPauseBtn" onclick="togglePlayPause()">
+<span class="inline-block w-2.5 h-2.5 bg-white rounded-xs" id="playIcon"></span>
+<span class="font-medium tracking-wider" id="playText">PAUSE</span>
+</button>
+<button class="px-4 py-2 rounded border border-white/10 hover:border-white/30 transition-all hover:text-white tracking-wider cursor-pointer" onclick="restartAnimation()">
+            RESTART
+          </button>
+</div>
+<div class="flex items-center space-x-4">
+<span class="text-neutral-500 font-mono text-[11px] tracking-widest">SPEED:</span>
+<button class="speed-btn text-neutral-400 hover:text-white tracking-wider transition-colors cursor-pointer" data-speed="0.5" onclick="setSpeed(0.5)">0.5x</button>
+<button class="speed-btn text-white font-bold tracking-wider transition-colors cursor-pointer" data-speed="1.0" onclick="setSpeed(1.0)">1.0x</button>
+<button class="speed-btn text-neutral-400 hover:text-white tracking-wider transition-colors cursor-pointer" data-speed="1.5" onclick="setSpeed(1.5)">1.5x</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Brand & Loading Status (Identical to Storyboard footer) -->
+<footer class="w-full py-9 flex flex-col items-center justify-center space-y-2 select-none z-20">
+<div class="text-sm md:text-base font-bold tracking-luxury uppercase pl-1 text-white">
+      V A Y N E
+    </div>
+<div class="flex items-center space-x-2 text-[10px] md:text-[11px] tracking-subtle uppercase text-neutral-400">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+<span id="loadingMessage">LOADING YOUR STYLE</span>
+</div>
+</footer>
+<!-- Precision Animation Script Matching Storyboard 1:1 -->
+<script>
+    /**
+     * Exact 1:1 SVG paths derived from storyboard https://lh3.googleusercontent.com/aida-public/AB6AXuBTmczuLfTmLBZJVta4Owi0X7Q4LqMUD9Khe51oMMC3C72mx1JbLVQVp3rJVfWTFTy9S_pARQqjrtl6CDctA2jtT4hJmYd0D5ktnFTnutk0RwV_8fSe1IiKVVyPwpX9-rm5Xm4KBmybYgjbkZu615oIBSw5pIHNhQOREIU20sVAc4MKhFIn6JS19Yc1lHgVfGrxsSbgx9Bxsg8M5LLqm1Tk7u43WB8N7AQgQKIPgkz2CvyYPpg2Mjhx71y73rCWNf54 (Canvas viewBox: 0 0 1000 280, baseline y = 140)
+     * 
+     * Frame 01: Horizontal line entering from left with a glowing circular bead at leading tip.
+     * Frame 02: Horizontal line extending with open chevron arrow head '>' at the front.
+     * Frame 03: Arched shoulder ramp rising up, curving smoothly over into sleeve drop.
+     * Frame 04: Exact continuous t-shirt silhouette:
+     *           Horizontal baseline in -> sleeve underside -> torso side down -> bottom hem -> torso side up ->
+     *           sleeve outer edge up -> shoulder slope in -> crewneck dip -> shoulder slope out -> sleeve drop -> baseline out.
+     * Frame 05: Holds the exact t-shirt shape with subtle neon glow luminescence.
+     * Frame 06: Torso drops away, leaving the arched neckline and shoulder silhouette wave transitioning back to baseline.
+     * Frame 07: Snaps forward into horizontal line with open arrow head chevron '>'.
+     * Frame 08: Line continues swiftly to the right with glowing bead at tip, fading out cleanly into distance.
+     */
+    
+    // T-shirt geometry coordinates (centered around x: 500, baseline y: 140)
+    // Left shoulder / neckline / right shoulder top at y: 88, collar dips to y: 104
+    // Sleeve flares down to y: 154, torso extends down to y: 196
+    const TSHIRT_CONTINUOUS_PATH = 
+      "M 140,140 " +
+      "L 408,140 " +
+      "C 416,140 422,143 425,150 " +
+      "L 435,172 " +
+      "C 437,177 442,176 445,171 " +
+      "L 448,154 " +
+      "C 448,149 452,146 456,146 " +
+      "L 456,192 " +
+      "C 456,196 459,198 464,198 " +
+      "L 536,198 " +
+      "C 541,198 544,196 544,192 " +
+      "L 544,146 " +
+      "C 548,146 552,149 552,154 " +
+      "L 555,171 " +
+      "C 558,176 563,177 565,172 " +
+      "L 575,150 " +
+      "C 578,143 584,140 592,140 " +
+      "L 860,140 " +
+      "M 425,150 " +
+      "L 442,106 " +
+      "C 444,101 448,97 453,95 " +
+      "L 482,88 " +
+      "C 490,86 494,98 500,102 " +
+      "C 506,98 510,86 518,88 " +
+      "L 547,95 " +
+      "C 552,97 556,101 558,106 " +
+      "L 575,150";
+
+    // Continuous single-stroke version that matches Frame 04/05
+    // Left line -> left sleeve cuff -> shoulder -> collar dip -> shoulder -> right sleeve cuff -> torso bottom -> right line
+    const TSHIRT_STROKE_EXACT = 
+      "M 120,140 " +
+      "L 405,140 " +
+      "C 412,140 417,136 420,130 " +
+      "L 434,98 " +
+      "C 436,92 441,88 447,86 " +
+      "L 480,80 " +
+      "C 488,80 493,92 500,92 " +
+      "C 507,92 512,80 520,80 " +
+      "L 553,86 " +
+      "C 559,88 564,92 566,98 " +
+      "L 580,130 " +
+      "C 583,136 588,140 595,140 " +
+      "L 880,140 " +
+      "M 420,130 " +
+      "L 432,154 " +
+      "C 435,160 441,160 444,155 " +
+      "L 452,142 " +
+      "L 452,192 " +
+      "C 452,196 455,198 460,198 " +
+      "L 540,198 " +
+      "C 545,198 548,196 548,192 " +
+      "L 548,142 " +
+      "L 556,155 " +
+      "C 559,160 565,160 568,154 " +
+      "L 580,130";
+
+    // Frame 06 transforms back: Torso has dropped away, leaving the elegant curved shoulder wave
+    const SHOULDER_WAVE_PATH = 
+      "M 200,140 " +
+      "L 400,140 " +
+      "C 416,140 426,128 434,106 " +
+      "C 442,84 456,76 476,76 " +
+      "C 488,76 494,88 500,88 " +
+      "C 506,88 512,76 524,76 " +
+      "C 544,76 558,84 566,106 " +
+      "C 574,128 584,140 600,140 " +
+      "L 780,140";
+
+    // Frame 03 transforms: ramp wave rising smoothly and hooking over sleeve
+    const RAMP_TRANSFORM_PATH = 
+      "M 160,140 " +
+      "L 440,140 " +
+      "C 490,140 530,126 560,98 " +
+      "C 582,78 604,74 624,78 " +
+      "C 638,82 648,94 656,106 " +
+      "L 670,128";
+
+    const STAGES = [
+      {
+        num: "01",
+        desc: "Line enters",
+        duration: 1100,
+        path: "M 40,140 L 460,140",
+        arrow: { visible: false },
+        dot: { visible: true, cx: 460, cy: 140 },
+        opacity: 0.95
+      },
+      {
+        num: "02",
+        desc: "Becomes arrow",
+        duration: 1000,
+        path: "M 80,140 L 580,140",
+        arrow: { visible: true, points: "560,122 584,140 560,158" },
+        dot: { visible: false },
+        opacity: 1
+      },
+      {
+        num: "03",
+        desc: "Transforms",
+        duration: 1050,
+        path: RAMP_TRANSFORM_PATH,
+        arrow: { visible: false },
+        dot: { visible: false },
+        opacity: 1
+      },
+      {
+        num: "04",
+        desc: "Becomes t-shirt",
+        duration: 1200,
+        path: TSHIRT_STROKE_EXACT,
+        arrow: { visible: false },
+        dot: { visible: false },
+        opacity: 1
+      },
+      {
+        num: "05",
+        desc: "Holds for a moment",
+        duration: 1400,
+        path: TSHIRT_STROKE_EXACT,
+        arrow: { visible: false },
+        dot: { visible: false },
+        opacity: 1,
+        holdPulse: true
+      },
+      {
+        num: "06",
+        desc: "Transforms back",
+        duration: 1050,
+        path: SHOULDER_WAVE_PATH,
+        arrow: { visible: false },
+        dot: { visible: false },
+        opacity: 1
+      },
+      {
+        num: "07",
+        desc: "Becomes arrow",
+        duration: 1000,
+        path: "M 160,140 L 680,140",
+        arrow: { visible: true, points: "660,122 684,140 660,158" },
+        dot: { visible: false },
+        opacity: 1
+      },
+      {
+        num: "08",
+        desc: "Continues and fades",
+        duration: 1250,
+        path: "M 320,140 L 960,140",
+        arrow: { visible: false },
+        dot: { visible: true, cx: 960, cy: 140 },
+        opacity: 0.18
+      }
+    ];
+
+    let currentStep = 0;
+    let isPlaying = true;
+    let speed = 1.0;
+    let timer = null;
+
+    const mainPath = document.getElementById('mainPath');
+    const arrowHead = document.getElementById('arrowHead');
+    const headDot = document.getElementById('headDot');
+    const stageSvg = document.getElementById('stageSvg');
+    const stepNumEl = document.getElementById('stepNum');
+    const stepDescEl = document.getElementById('stepDesc');
+    const stepCards = document.querySelectorAll('.step-card');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const playText = document.getElementById('playText');
+    const playIcon = document.getElementById('playIcon');
+
+    function renderStep(index) {
+      const step = STAGES[index];
+      
+      // Update SVG Path & opacity
+      mainPath.setAttribute('d', step.path);
+      mainPath.style.opacity = step.opacity;
+
+      // Pulse effect on hold (Frame 05)
+      if (step.holdPulse) {
+        stageSvg.classList.add('tshirt-hold');
+      } else {
+        stageSvg.classList.remove('tshirt-hold');
+      }
+
+      // Arrow chevron head update
+      if (step.arrow && step.arrow.visible) {
+        arrowHead.setAttribute('points', step.arrow.points);
+        arrowHead.style.opacity = '1';
+        arrowHead.style.display = 'block';
+      } else {
+        arrowHead.style.opacity = '0';
+        arrowHead.style.display = 'none';
+      }
+
+      // Glowing dot update
+      if (step.dot && step.dot.visible) {
+        headDot.setAttribute('cx', step.dot.cx);
+        headDot.setAttribute('cy', step.dot.cy);
+        headDot.style.opacity = step.opacity;
+        headDot.style.display = 'block';
+      } else {
+        headDot.style.opacity = '0';
+        headDot.style.display = 'none';
+      }
+
+      // Step text
+      stepNumEl.textContent = step.num;
+      stepDescEl.textContent = step.desc;
+
+      // Update timeline UI cards
+      stepCards.forEach((card, idx) => {
+        const bar = card.querySelector('.step-bar');
+        const descText = card.querySelector('.text-neutral-400, .text-white');
+        
+        if (idx === index) {
+          card.classList.add('border-white/60', 'bg-white/[0.08]');
+          card.classList.remove('border-white/10', 'bg-white/[0.02]');
+          if (descText) descText.className = "text-[11px] text-white truncate mt-1 font-semibold";
+          bar.style.width = '100%';
+          bar.className = "step-bar h-[2px] bg-white mt-2.5 transition-all duration-300";
+        } else if (idx < index) {
+          card.classList.remove('border-white/60', 'bg-white/[0.08]');
+          card.classList.add('border-white/10', 'bg-white/[0.02]');
+          if (descText) descText.className = "text-[11px] text-neutral-300 truncate mt-1 font-medium";
+          bar.style.width = '100%';
+          bar.className = "step-bar h-[2px] bg-white/30 mt-2.5 transition-all duration-300";
+        } else {
+          card.classList.remove('border-white/60', 'bg-white/[0.08]');
+          card.classList.add('border-white/10', 'bg-white/[0.02]');
+          if (descText) descText.className = "text-[11px] text-neutral-400 truncate mt-1 font-medium";
+          bar.style.width = '0%';
+          bar.className = "step-bar h-[2px] bg-white mt-2.5 transition-all duration-300";
+        }
+      });
+    }
+
+    function runLoop() {
+      if (!isPlaying) return;
+      
+      renderStep(currentStep);
+      const delay = STAGES[currentStep].duration / speed;
+
+      timer = setTimeout(() => {
+        currentStep = (currentStep + 1) % STAGES.length;
+        runLoop();
+      }, delay);
+    }
+
+    function togglePlayPause() {
+      isPlaying = !isPlaying;
+      if (isPlaying) {
+        playText.textContent = "PAUSE";
+        playIcon.className = "inline-block w-2.5 h-2.5 bg-white rounded-xs";
+        runLoop();
+      } else {
+        clearTimeout(timer);
+        playText.textContent = "PLAY";
+        playIcon.className = "inline-block w-0 h-0 border-t-[5px] border-t-transparent border-b-[5px] border-b-transparent border-l-[8px] border-l-white ml-0.5";
+      }
+    }
+
+    function restartAnimation() {
+      clearTimeout(timer);
+      currentStep = 0;
+      isPlaying = true;
+      playText.textContent = "PAUSE";
+      playIcon.className = "inline-block w-2.5 h-2.5 bg-white rounded-xs";
+      runLoop();
+    }
+
+    function jumpToStep(stepIdx) {
+      clearTimeout(timer);
+      currentStep = stepIdx;
+      renderStep(currentStep);
+      if (isPlaying) {
+        timer = setTimeout(() => {
+          currentStep = (currentStep + 1) % STAGES.length;
+          runLoop();
+        }, STAGES[currentStep].duration / speed);
+      }
+    }
+
+    function setSpeed(val) {
+      speed = val;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        if (parseFloat(btn.dataset.speed) === val) {
+          btn.className = "speed-btn text-white font-bold tracking-wider transition-colors cursor-pointer";
+        } else {
+          btn.className = "speed-btn text-neutral-400 hover:text-white tracking-wider transition-colors cursor-pointer";
+        }
+      });
+    }
+
+    // Start on load
+    renderStep(0);
+    runLoop();
+  </script>
+</body></html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>VAYNE — Select Department</title>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Anton (Heavy Condensed Display) & Space Grotesk / Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Anton', 'sans-serif'],
+            mono: ['"Space Grotesk"', 'monospace', 'sans-serif'],
+            sans: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              black: '#000000',
+              white: '#ffffff',
+              muted: '#767676',
+              border: '#e5e5e5',
+            }
+          },
+          letterSpacing: {
+            'ultra-wide': '0.22em',
+            'tightest': '-0.035em',
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Typography and Micro-Interactions -->
+<style data-purpose="custom-typography">
+    .font-condensed-impact {
+      font-family: 'Anton', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: -0.015em;
+      line-height: 0.88;
+    }
+  </style>
+<style data-purpose="row-interactions">
+    .collection-row {
+      transition: background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .collection-row .arrow-icon {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.35s ease, color 0.35s ease;
+    }
+    .collection-row:hover .arrow-icon {
+      transform: translate(6px, -6px);
+      background-color: #000000;
+      color: #ffffff;
+    }
+    .collection-row .department-title {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    }
+    .collection-row:hover .department-title {
+      transform: translateX(12px);
+    }
+    .collection-row:hover {
+      background-color: rgba(0, 0, 0, 0.015);
+    }
+  </style>
+</head>
+<body class="bg-white text-brand-black min-h-screen flex flex-col font-sans selection:bg-black selection:text-white antialiased">
+<!-- BEGIN: MainHeader -->
+<header class="w-full border-b border-brand-border sticky top-0 bg-white/95 backdrop-blur-sm z-50">
+
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col justify-between max-w-7xl mx-auto w-full px-6 md:px-12 pt-14 pb-20">
+<!-- Hero Title Section -->
+<section class="mb-14 md:mb-20">
+<!-- Archive Metadata Subtitle -->
+
+<!-- Main Display Title -->
+<h1 class="font-condensed-impact text-5xl sm:text-7xl lg:text-8xl tracking-tight text-black">
+        CHOOSE YOUR COLLECTION
+      </h1>
+</section>
+<!-- BEGIN: DepartmentList -->
+<!-- Full-width stacked editorial list layout with divider hairlines -->
+<section aria-label="Departments Collection" class="border-t border-black divide-y divide-brand-border">
+<!-- Row 01: MEN -->
+<article class="collection-row group py-10 md:py-14 px-2 block cursor-pointer">
+<a class="block w-full text-inherit no-underline" href="#men">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<!-- Index & Title Group -->
+<div class="flex flex-col sm:flex-row sm:items-baseline gap-4 sm:gap-10">
+
+<h2 class="department-title font-condensed-impact text-6xl sm:text-8xl lg:text-9xl text-black">
+                MEN
+              </h2>
+</div>
+<!-- Description & Metadata -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end gap-6 sm:gap-14 lg:w-1/2">
+<div class="max-w-xs sm:max-w-sm">
+<p class="text-xs font-mono uppercase tracking-wider text-brand-muted mb-1.5">
+                  24 PIECES
+                </p>
+<p class="text-sm md:text-base text-neutral-800 leading-relaxed font-normal">
+                  Oversized silhouettes, heavy tailoring &amp; modern streetwear.
+                </p>
+</div>
+<!-- Interactive Arrow -->
+<div class="arrow-icon w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center shrink-0 self-start sm:self-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<line x1="7" x2="17" y1="17" y2="7"></line>
+<polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+</div>
+</div>
+</div>
+</a>
+</article>
+<!-- Row 02: WOMEN -->
+<article class="collection-row group py-10 md:py-14 px-2 block cursor-pointer">
+<a class="block w-full text-inherit no-underline" href="#women">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<!-- Index & Title Group -->
+<div class="flex flex-col sm:flex-row sm:items-baseline gap-4 sm:gap-10">
+
+<h2 class="department-title font-condensed-impact text-6xl sm:text-8xl lg:text-9xl text-black">
+                WOMEN
+              </h2>
+</div>
+<!-- Description & Metadata -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end gap-6 sm:gap-14 lg:w-1/2">
+<div class="max-w-xs sm:max-w-sm">
+<p class="text-xs font-mono uppercase tracking-wider text-brand-muted mb-1.5">
+                  32 PIECES
+                </p>
+<p class="text-sm md:text-base text-neutral-800 leading-relaxed font-normal">
+                  Sculptural cuts, fluid layers &amp; bold statement essentials.
+                </p>
+</div>
+<!-- Interactive Arrow -->
+<div class="arrow-icon w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center shrink-0 self-start sm:self-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<line x1="7" x2="17" y1="17" y2="7"></line>
+<polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+</div>
+</div>
+</div>
+</a>
+</article>
+<!-- Row 03: KIDS -->
+<article class="collection-row group py-10 md:py-14 px-2 block cursor-pointer">
+<a class="block w-full text-inherit no-underline" href="#kids">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+<!-- Index & Title Group -->
+<div class="flex flex-col sm:flex-row sm:items-baseline gap-4 sm:gap-10">
+
+<h2 class="department-title font-condensed-impact text-6xl sm:text-8xl lg:text-9xl text-black">
+                KIDS
+              </h2>
+</div>
+<!-- Description & Metadata -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end gap-6 sm:gap-14 lg:w-1/2">
+<div class="max-w-xs sm:max-w-sm">
+<p class="text-xs font-mono uppercase tracking-wider text-brand-muted mb-1.5">
+                  18 PIECES
+                </p>
+<p class="text-sm md:text-base text-neutral-800 leading-relaxed font-normal">
+                  Refined miniature proportions with premium comfort.
+                </p>
+</div>
+<!-- Interactive Arrow -->
+<div class="arrow-icon w-12 h-12 rounded-full border border-neutral-300 flex items-center justify-center shrink-0 self-start sm:self-center">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+<line x1="7" x2="17" y1="17" y2="7"></line>
+<polyline points="7 7 17 7 17 17"></polyline>
+</svg>
+</div>
+</div>
+</div>
+</a>
+</article>
+</section>
+<!-- END: DepartmentList -->
+<!-- Supplementary Brand Details -->
+
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+
+<!-- END: MainFooter -->
+
+
+</body></html>
