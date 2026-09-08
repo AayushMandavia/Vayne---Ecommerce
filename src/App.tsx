@@ -5,6 +5,7 @@ import ProductDetail from './ProductDetail';
 import CartDrawer, { type CartItem, type RecommendedProduct } from './CartDrawer';
 import Checkout from './Checkout';
 import Preloader from './Preloader';
+import ShopPreloader from './ShopPreloader';
 import AccountModal from './AccountModal';
 import { type CategoryId, type Product } from './data';
 
@@ -136,7 +137,8 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const [showPreloader, setShowPreloader] = useState(true);
+  const [showInitialPreloader, setShowInitialPreloader] = useState(true);
+  const [showShopPreloader, setShowShopPreloader] = useState(false);
 
   // Scroll & swipe/drag gesture tracking on landing page
   const lastScrollTime = useRef(0);
@@ -423,8 +425,13 @@ export default function App() {
     };
   }, [navigate, shopFlow]);
 
-  // Trigger shop flow: transition to category selection
+  // Trigger shop flow: show rapid multi-fashion lookbook preloader before entering categories
   const handleOpenShop = () => {
+    setShowShopPreloader(true);
+  };
+
+  const handleShopPreloaderComplete = () => {
+    setShowShopPreloader(false);
     setSelectedCategory(null);
     setShopFlow('category-select');
   };
@@ -964,8 +971,15 @@ export default function App() {
         {/* ========================================================================= */}
         {/* 13. STITCH VAYNE EDITORIAL PRELOADER WITH BASELINE DOTS & IMAGE CACHING    */}
         {/* ========================================================================= */}
-        {showPreloader && (
-          <Preloader onComplete={() => setShowPreloader(false)} />
+        {showInitialPreloader && (
+          <Preloader onComplete={() => setShowInitialPreloader(false)} />
+        )}
+
+        {/* ========================================================================= */}
+        {/* 14. SHOP TRANSITION MULTI-IMAGE FASHION PRELOADER                          */}
+        {/* ========================================================================= */}
+        {showShopPreloader && (
+          <ShopPreloader onComplete={handleShopPreloaderComplete} mode="shop" />
         )}
       </div>
     </div>
