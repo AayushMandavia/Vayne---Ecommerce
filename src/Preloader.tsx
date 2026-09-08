@@ -5,16 +5,27 @@ interface PreloaderProps {
   onComplete: () => void;
 }
 
-const CRITICAL_IMAGES = [
-  '/landing/women-2.png',
-  '/landing/men-1.png',
-  '/landing/kid-1.png',
+const LANDING_IMAGES = [
   '/landing/women-1.png',
-  '/landing/men-2.png',
-  '/landing/kid-2.png',
+  '/landing/women-2.png',
   '/landing/women-3.png',
+  '/landing/men-1.png',
+  '/landing/men-2.png',
   '/landing/men-3.png',
+  '/landing/kid-1.png',
+  '/landing/kid-2.png',
   '/landing/kid-3.png',
+];
+
+const SHOP_PRELOADER_IMAGES = [
+  '/shop-preloader/image_0.png',
+  '/shop-preloader/image_1.png',
+  '/shop-preloader/image_2.png',
+  '/shop-preloader/image_3.png',
+  '/shop-preloader/image_4.png',
+  '/shop-preloader/image_5.png',
+  '/shop-preloader/image_6.png',
+  '/shop-preloader/image_7.png',
 ];
 
 export default function Preloader({ onComplete }: PreloaderProps) {
@@ -22,20 +33,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
   useEffect(() => {
     let isMounted = true;
-    const minDisplayTime = 2200; // 2.2s allows at least one full exquisite dot-animation cycle
+    const minDisplayTime = 4200; // Increased by 2 seconds (was 2.2s -> now 4.2s)
     const startTime = Date.now();
 
-    // Collect product hero images to cache into memory
-    const productImages = PRODUCTS.slice(0, 18).map((p) => p.image);
-    const allImagesToPreload = Array.from(new Set([...CRITICAL_IMAGES, ...productImages]));
-
-    // Pre-cache the shop preloader JSON & player script for instant playback
-    try {
-      fetch('/preloader.json', { cache: 'force-cache' }).catch(() => {});
-      fetch('/lottie-player.js', { cache: 'force-cache' }).catch(() => {});
-    } catch {
-      // ignore
-    }
+    // Collect landing models, shop preloader lookbook images, and catalog hero images to preload
+    const productImages = PRODUCTS.slice(0, 24).map((p) => p.image);
+    const allImagesToPreload = Array.from(
+      new Set([...LANDING_IMAGES, ...SHOP_PRELOADER_IMAGES, ...productImages])
+    );
 
     let loadedCount = 0;
     const total = allImagesToPreload.length;
@@ -59,6 +64,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       return;
     }
 
+    // Proactively download and decode all landing and shop preloader images into browser cache
     allImagesToPreload.forEach((src) => {
       const img = new Image();
       const onDone = () => {
@@ -72,10 +78,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       img.src = src;
     });
 
-    // Fallback maximum safety timeout (3.5s max)
+    // Fallback maximum safety timeout (5.5s max)
     const maxTimer = setTimeout(() => {
       tryFinish();
-    }, 3500);
+    }, 5500);
 
     return () => {
       isMounted = false;
