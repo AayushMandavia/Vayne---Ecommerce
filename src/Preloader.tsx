@@ -29,6 +29,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
     const productImages = PRODUCTS.slice(0, 18).map((p) => p.image);
     const allImagesToPreload = Array.from(new Set([...CRITICAL_IMAGES, ...productImages]));
 
+    // Pre-cache the shop preloader JSON & player script for instant playback
+    try {
+      fetch('/preloader.json', { cache: 'force-cache' }).catch(() => {});
+      fetch('/lottie-player.js', { cache: 'force-cache' }).catch(() => {});
+    } catch {
+      // ignore
+    }
+
     let loadedCount = 0;
     const total = allImagesToPreload.length;
 

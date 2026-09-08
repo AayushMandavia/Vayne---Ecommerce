@@ -3,46 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fashion Preloader (White Background)</title>
-  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <title>VAYNE Editorial Lookbook Preloader</title>
+  <script src="/lottie-player.js"></script>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    body {
+    html, body {
+      background-color: #ffffff;
       background: #ffffff;
       color: #000000;
+      margin: 0;
+      padding: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      overflow: hidden;
     }
-    .player-wrapper {
+    .player-container {
       width: 100vw;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: #ffffff;
       background: #ffffff;
       position: relative;
     }
     lottie-player {
       width: 100%;
       height: 100%;
-      max-width: 1200px;
-      max-height: 700px;
+      max-width: 1366px;
+      max-height: 768px;
+      background-color: #ffffff;
+      background: #ffffff;
     }
   </style>
 </head>
 <body>
-  <div class="player-wrapper">
+  <div class="player-container">
     <lottie-player
-      id="fashionPlayer"
+      id="vaynePlayer"
       src="/preloader.json"
       background="#ffffff"
       speed="1"
