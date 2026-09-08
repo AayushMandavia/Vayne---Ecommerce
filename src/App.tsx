@@ -7,6 +7,7 @@ import Checkout from './Checkout';
 import Preloader from './Preloader';
 import ShopPreloader from './ShopPreloader';
 import AccountModal from './AccountModal';
+import { SilhouetteMen, SilhouetteWomen, SilhouetteKids } from './CategorySilhouettes';
 import { type CategoryId, type Product } from './data';
 
 interface Drop {
@@ -809,10 +810,22 @@ export default function App() {
                       }`}
                     >
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-                        {/* Department Title */}
-                        <div className="flex items-center">
+                        {/* Department Title & Silhouette (Matches Editorial Signage) */}
+                        <div className="flex items-center gap-5 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-out group-hover:translate-x-3 sm:group-hover:translate-x-4">
+                          <div className="shrink-0 flex items-center justify-center text-black">
+                            {category.id === 'men' && (
+                              <SilhouetteMen className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
+                            )}
+                            {category.id === 'women' && (
+                              <SilhouetteWomen className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
+                            )}
+                            {category.id === 'kids' && (
+                              <SilhouetteKids className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
+                            )}
+                          </div>
+
                           <h2
-                            className="text-6xl sm:text-8xl lg:text-9xl text-black transition-transform duration-300 ease-out group-hover:translate-x-3 sm:group-hover:translate-x-4"
+                            className="text-6xl sm:text-8xl lg:text-9xl text-black"
                             style={{
                               fontFamily: "'Anton', sans-serif",
                               letterSpacing: '-0.015em',
