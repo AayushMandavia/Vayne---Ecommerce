@@ -7,6 +7,7 @@ import {
   RotateCcw,
   Leaf,
   ShoppingBag,
+  User,
   Check,
   ArrowLeft,
   ChevronDown,
@@ -21,6 +22,7 @@ interface ProductDetailProps {
   onBackToCategories: () => void;
   onOpenCart: () => void;
   onAddToCart: (product: Product, size: string, color: string) => void;
+  onOpenAccount?: () => void;
 }
 
 export default function ProductDetail({
@@ -31,6 +33,7 @@ export default function ProductDetail({
   onBackToCategories,
   onOpenCart,
   onAddToCart,
+  onOpenAccount,
 }: ProductDetailProps) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || '');
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[1] || product.sizes[0] || 'M');
@@ -124,8 +127,16 @@ export default function ProductDetail({
             </button>
             <button
               type="button"
+              onClick={onOpenAccount}
+              className="p-1 text-[#111827] hover:opacity-70 transition-opacity cursor-pointer"
+              aria-label="Account"
+            >
+              <User className="w-5 h-5" strokeWidth={1.75} />
+            </button>
+            <button
+              type="button"
               onClick={onOpenCart}
-              className="relative cursor-pointer p-1"
+              className="relative cursor-pointer p-1 text-[#111827] hover:opacity-70 transition-opacity"
               aria-label="Shopping Bag"
             >
               <ShoppingBag className="w-5 h-5 text-[#111827]" strokeWidth={1.75} />

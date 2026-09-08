@@ -5,6 +5,7 @@ import ProductDetail from './ProductDetail';
 import CartDrawer, { type CartItem, type RecommendedProduct } from './CartDrawer';
 import Checkout from './Checkout';
 import Preloader from './Preloader';
+import AccountModal from './AccountModal';
 import { type CategoryId, type Product } from './data';
 
 interface Drop {
@@ -134,6 +135,7 @@ export default function App() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [showPreloader, setShowPreloader] = useState(false);
 
   // Scroll & swipe/drag gesture tracking on landing page
@@ -902,6 +904,7 @@ export default function App() {
                 setShopFlow('pdp');
               }}
               onOpenCart={() => setIsCartOpen(true)}
+              onOpenAccount={() => setIsAccountOpen(true)}
               onAddToCart={handleAddToCart}
             />
           </div>
@@ -921,6 +924,7 @@ export default function App() {
               onBackToCatalog={() => setShopFlow('catalog')}
               onBackToCategories={() => setShopFlow('category-select')}
               onOpenCart={() => setIsCartOpen(true)}
+              onOpenAccount={() => setIsAccountOpen(true)}
               onAddToCart={handleAddToCart}
             />
           </div>
@@ -958,6 +962,14 @@ export default function App() {
             setIsCartOpen(false);
             setShopFlow('checkout');
           }}
+        />
+
+        {/* ========================================================================= */}
+        {/* 12. VAYNE VIP CLIENT ACCOUNT MODAL / DRAWER                               */}
+        {/* ========================================================================= */}
+        <AccountModal
+          isOpen={isAccountOpen}
+          onClose={() => setIsAccountOpen(false)}
         />
       </div>
     </div>

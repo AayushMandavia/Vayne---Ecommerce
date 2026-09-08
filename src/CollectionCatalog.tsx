@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { Search, User, ShoppingBag, ArrowLeft, ArrowRight, Check, SlidersHorizontal, X } from 'lucide-react';
 import { type Product, PRODUCTS, type CategoryId } from './data';
+import AccountModal from './AccountModal';
 
 const CATEGORY_META: Record<
   CategoryId,
@@ -63,6 +64,7 @@ interface CollectionCatalogProps {
   onSelectProduct: (product: Product) => void;
   onOpenCart: () => void;
   onAddToCart: (product: Product, size: string, color: string) => void;
+  onOpenAccount?: () => void;
 }
 
 export default function CollectionCatalog({
@@ -72,6 +74,7 @@ export default function CollectionCatalog({
   onSelectProduct,
   onOpenCart,
   onAddToCart,
+  onOpenAccount,
 }: CollectionCatalogProps) {
   const [activeCategory, setActiveCategory] = useState<CategoryId>(initialCategory);
   const [selectedType, setSelectedType] = useState<string>('All Pieces');
@@ -83,6 +86,7 @@ export default function CollectionCatalog({
   const [currentPage, setCurrentPage] = useState(1);
   const [addedProductId, setAddedProductId] = useState<string | null>(null);
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   const meta = CATEGORY_META[activeCategory];
 
@@ -283,6 +287,13 @@ export default function CollectionCatalog({
 
           <button
             type="button"
+            onClick={() => {
+              if (onOpenAccount) {
+                onOpenAccount();
+              } else {
+                setIsAccountOpen(true);
+              }
+            }}
             className="p-2 text-[#111827] hover:opacity-70 transition-opacity cursor-pointer"
             aria-label="Account"
           >
@@ -773,6 +784,12 @@ export default function CollectionCatalog({
           </div>
         </div>
       </footer>
+
+      {/* Client VIP Account Modal */}
+      <AccountModal
+        isOpen={isAccountOpen}
+        onClose={() => setIsAccountOpen(false)}
+      />
     </div>
   );
 }
