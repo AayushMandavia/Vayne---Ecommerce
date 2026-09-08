@@ -813,9 +813,6 @@ export default function App() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono tracking-widest text-neutral-400 uppercase">
-                  DROP 01 — 09 ARCHIVE
-                </span>
               </div>
             </header>
 
@@ -823,9 +820,6 @@ export default function App() {
             <main className="flex-grow flex flex-col justify-between max-w-7xl mx-auto w-full px-6 md:px-12 pt-12 md:pt-16 pb-20">
               {/* Hero Title */}
               <section className="mb-12 md:mb-16">
-                <p className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-2">
-                  DROP 01 — 09 ARCHIVE
-                </p>
                 <h1
                   className="text-5xl sm:text-7xl lg:text-8xl tracking-tight text-black uppercase"
                   style={{
