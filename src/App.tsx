@@ -136,7 +136,7 @@ export default function App() {
   const [cartItems, setCartItems] = useState<CartItem[]>(INITIAL_CART);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
-  const [showPreloader, setShowPreloader] = useState(false);
+  const [showPreloader, setShowPreloader] = useState(true);
 
   // Scroll & swipe/drag gesture tracking on landing page
   const lastScrollTime = useRef(0);
@@ -423,13 +423,8 @@ export default function App() {
     };
   }, [navigate, shopFlow]);
 
-  // Trigger shop flow: show fashion preloader for 4s then transition to category selection
+  // Trigger shop flow: transition to category selection
   const handleOpenShop = () => {
-    setShowPreloader(true);
-  };
-
-  const handlePreloaderComplete = () => {
-    setShowPreloader(false);
     setSelectedCategory(null);
     setShopFlow('category-select');
   };
@@ -753,12 +748,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* ========================================================================= */}
-        {/* PRELOADER (Haute Couture Fashion Collage)                                 */}
-        {/* ========================================================================= */}
-        {showPreloader && (
-          <Preloader onComplete={handlePreloaderComplete} mode="shop" />
-        )}
 
         {/* ========================================================================= */}
         {/* 6. CATEGORY SELECTION (Stitch Editorial Redesign: MEN, WOMEN, KIDS)       */}
@@ -971,6 +960,13 @@ export default function App() {
           isOpen={isAccountOpen}
           onClose={() => setIsAccountOpen(false)}
         />
+
+        {/* ========================================================================= */}
+        {/* 13. STITCH VAYNE EDITORIAL PRELOADER WITH BASELINE DOTS & IMAGE CACHING    */}
+        {/* ========================================================================= */}
+        {showPreloader && (
+          <Preloader onComplete={() => setShowPreloader(false)} />
+        )}
       </div>
     </div>
   );

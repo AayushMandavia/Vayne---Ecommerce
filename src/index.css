@@ -52,3 +52,77 @@ iframe[srcdoc*="netlify"] {
   clip-path: circle(0) !important;
 }
 
+/* Stitch VAYNE Editorial Preloader with Baseline Dots */
+.font-luxury-editorial {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+}
+
+.ambient-glow {
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.035) 0%, rgba(0, 0, 0, 0.008) 50%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  animation: ambientBreathe 7s ease-in-out infinite alternate;
+}
+
+@keyframes ambientBreathe {
+  0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.95); }
+  100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.08); }
+}
+
+.brand-hero {
+  font-size: clamp(4.5rem, 11vw, 9.5rem);
+  letter-spacing: 0.22em;
+  line-height: 0.9;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  font-feature-settings: "lnum" 1, "kern" 1;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
+}
+
+.dots-container {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(8px, 0.9vw, 14px);
+  margin-left: clamp(8px, 1.2vw, 18px);
+  margin-bottom: clamp(6px, 1.1vw, 18px);
+  align-self: flex-end;
+}
+
+.dot-seq {
+  display: inline-block;
+  width: clamp(7px, 0.75vw, 10px);
+  height: clamp(7px, 0.75vw, 10px);
+  border-radius: 50%;
+  background-color: #000000;
+  opacity: 0.07;
+  transform: scale(0.85);
+  animation: sequentialFill 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  will-change: opacity, transform, background-color;
+}
+
+@keyframes sequentialFill {
+  0%, 6% {
+    opacity: 0.07;
+    transform: scale(0.8);
+  }
+  16%, 74% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  84%, 100% {
+    opacity: 0.07;
+    transform: scale(0.8);
+  }
+}
+
+.dot-1 { animation-delay: 0.0s; }
+.dot-2 { animation-delay: 0.22s; }
+.dot-3 { animation-delay: 0.44s; }
+.dot-4 { animation-delay: 0.66s; }
+
+

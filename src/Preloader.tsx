@@ -1,102 +1,118 @@
 import { useEffect, useState } from 'react';
+import { PRODUCTS } from './data';
 
 interface PreloaderProps {
   onComplete: () => void;
-  mode?: 'initial' | 'shop';
 }
 
-export default function Preloader({ onComplete, mode = 'shop' }: PreloaderProps) {
-  const [progress, setProgress] = useState(0);
+const CRITICAL_IMAGES = [
+  '/landing/women-2.png',
+  '/landing/men-1.png',
+  '/landing/kid-1.png',
+  '/landing/women-1.png',
+  '/landing/men-2.png',
+  '/landing/kid-2.png',
+  '/landing/women-3.png',
+  '/landing/men-3.png',
+  '/landing/kid-3.png',
+];
+
+export default function Preloader({ onComplete }: PreloaderProps) {
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
-    const startTime = performance.now();
-    const duration = 2160; // Exactly 1-time load duration (54 frames / 25 fps = 2.16s)
+    let isMounted = true;
+    const minDisplayTime = 2200; // 2.2s allows at least one full exquisite dot-animation cycle
+    const startTime = Date.now();
 
-    let frameId: number;
-    const updateProgress = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const pct = Math.min(100, Math.round((elapsed / duration) * 100));
-      setProgress(pct);
+    // Collect product hero images to cache into memory
+    const productImages = PRODUCTS.slice(0, 18).map((p) => p.image);
+    const allImagesToPreload = Array.from(new Set([...CRITICAL_IMAGES, ...productImages]));
 
-      if (elapsed < duration) {
-        frameId = requestAnimationFrame(updateProgress);
-      }
+    let loadedCount = 0;
+    const total = allImagesToPreload.length;
+
+    const tryFinish = () => {
+      if (!isMounted) return;
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, minDisplayTime - elapsed);
+
+      setTimeout(() => {
+        if (!isMounted) return;
+        setIsExiting(true);
+        setTimeout(() => {
+          if (isMounted) onComplete();
+        }, 550); // Match fade transition duration
+      }, remaining);
     };
 
-    frameId = requestAnimationFrame(updateProgress);
+    if (total === 0) {
+      tryFinish();
+      return;
+    }
 
-    const timer = setTimeout(() => {
-      onComplete();
-    }, duration);
+    allImagesToPreload.forEach((src) => {
+      const img = new Image();
+      const onDone = () => {
+        loadedCount++;
+        if (loadedCount >= total) {
+          tryFinish();
+        }
+      };
+      img.onload = onDone;
+      img.onerror = onDone;
+      img.src = src;
+    });
+
+    // Fallback maximum safety timeout (3.5s max)
+    const maxTimer = setTimeout(() => {
+      tryFinish();
+    }, 3500);
 
     return () => {
-      cancelAnimationFrame(frameId);
-      clearTimeout(timer);
+      isMounted = false;
+      clearTimeout(maxTimer);
     };
   }, [onComplete]);
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex flex-col justify-between bg-white text-black select-none antialiased"
-      style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
+      className={`fixed inset-0 z-[99999] flex flex-col justify-between items-center select-none px-6 py-12 bg-white transition-opacity duration-500 ease-out ${
+        isExiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      }`}
+      style={{
+        fontFamily: "'Plus Jakarta Sans', sans-serif",
+      }}
     >
-      {/* Top Bar */}
-      <header className="w-full px-6 sm:px-12 py-6 flex items-center justify-between border-b border-neutral-100">
-        <div className="flex items-center gap-3">
-          <span
-            className="font-bold tracking-[0.25em] text-base sm:text-lg text-black"
-            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
-          >
-            VAYNE
-          </span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-[11px] font-mono tracking-widest text-neutral-500 uppercase">
-            {progress}% LOADED
-          </span>
-        </div>
+      {/* Soft Monochrome Ambient Radial Glow */}
+      <div className="ambient-glow top-1/2 left-1/2" />
+
+      {/* Subtle Top Anchor */}
+      <header className="w-full max-w-sm flex items-center justify-center z-10 pt-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.45em] text-neutral-400">
+        <span>ARCHIVE LOOKBOOK</span>
       </header>
 
-      {/* Centered Lottie Animation */}
-      <main className="flex-1 flex flex-col items-center justify-center px-4 w-full max-w-5xl mx-auto text-center">
-        <div className="w-full max-w-2xl sm:max-w-3xl relative flex flex-col items-center justify-center">
-          {/* Lottie Embed Player */}
-          <div className="w-full aspect-[1366/768] relative overflow-hidden rounded-2xl bg-white">
-            <iframe
-              src="/preloader-preview.html"
-              title="VAYNE Preloader Animation"
-              className="w-full h-full border-0 pointer-events-none bg-white"
-              allow="autoplay"
-            />
-          </div>
-
-          {/* Loading status & progress bar */}
-          <div className="w-full max-w-xs mt-6 flex flex-col items-center space-y-2.5">
-            <div className="w-full h-1 bg-neutral-100 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-black rounded-full transition-all duration-100 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-
-            <div className="flex items-center justify-between w-full text-[11px] font-mono uppercase tracking-[0.18em] text-neutral-400">
-              <span>{mode === 'initial' ? 'LAUNCHING SHOWROOM' : 'INITIALIZING STORE'}</span>
-              <span>{progress}%</span>
-            </div>
+      {/* Center Focal Typography: Luxury Editorial VAYNE with Baseline Dots */}
+      <main className="relative z-10 flex flex-col items-center justify-center my-auto transition-transform duration-500">
+        <div className="flex items-end justify-center tracking-normal text-center">
+          <h1 className="font-luxury-editorial text-black select-none brand-hero pl-[0.22em] leading-none">
+            VAYNE
+          </h1>
+          {/* Elegant Crisp Geometric Trailing Dots Sequence (4 dots at bottom baseline) */}
+          <div aria-label="Loading" className="dots-container select-none">
+            <span className="dot-seq dot-1" />
+            <span className="dot-seq dot-2" />
+            <span className="dot-seq dot-3" />
+            <span className="dot-seq dot-4" />
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="w-full py-6 sm:py-8 flex flex-col items-center justify-center space-y-1.5 border-t border-neutral-100">
-        <div className="flex items-center space-x-2 text-[11px] tracking-[0.2em] uppercase text-neutral-500 font-mono">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-          <span>
-            {mode === 'initial'
-              ? 'PREPARING VAYNE SHOWCASE'
-              : 'PREPARING THE COLLECTION LOOKBOOK'}
-          </span>
-        </div>
+      {/* Minimal Footer */}
+      <footer className="w-full max-w-sm z-10 pb-4 flex flex-col items-center text-center">
+        <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-neutral-300">
+          PARIS • TOKYO • NEW YORK
+        </span>
       </footer>
     </div>
   );
