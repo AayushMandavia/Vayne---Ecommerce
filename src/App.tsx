@@ -117,41 +117,7 @@ const CATEGORIES = [
 
 const GRAIN_DATA_URI = `data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E`;
 
-const INITIAL_CART: CartItem[] = [
-  {
-    id: 'cart-1',
-    productId: 'm-01',
-    name: 'Heavyweight Boxy Tee',
-    price: '$95.00',
-    priceNum: 95,
-    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=600&auto=format&fit=crop',
-    color: 'Onyx Black',
-    size: 'M',
-    quantity: 1,
-  },
-  {
-    id: 'cart-2',
-    productId: 'm-02',
-    name: 'Pleated Wool Wide Trousers',
-    price: '$280.00',
-    priceNum: 280,
-    image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?q=80&w=600&auto=format&fit=crop',
-    color: 'Deep Charcoal',
-    size: 'L',
-    quantity: 1,
-  },
-  {
-    id: 'cart-3',
-    productId: 'm-06',
-    name: 'French Terry Oversized Hoodie',
-    price: '$210.00',
-    priceNum: 210,
-    image: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=600&auto=format&fit=crop',
-    color: 'Heather Slate',
-    size: 'M',
-    quantity: 1,
-  },
-];
+const INITIAL_CART: CartItem[] = [];
 
 type Role = 'center' | 'left' | 'right' | 'back';
 type ShopFlowState = 'idle' | 'category-select' | 'catalog' | 'pdp' | 'checkout';
