@@ -5,6 +5,7 @@ interface PreloaderProps {
   onComplete: () => void;
 }
 
+// ORDER 1: Landing Page Carousel Drops & Category Cards (Crucial for first impression)
 const LANDING_IMAGES = [
   '/landing/women-1.png',
   '/landing/women-2.png',
@@ -17,6 +18,7 @@ const LANDING_IMAGES = [
   '/landing/kid-3.png',
 ];
 
+// ORDER 2: Shop Preloader Lookbook Collage (Crucial for instant shop entry)
 const SHOP_PRELOADER_IMAGES = [
   '/shop-preloader/image_0.png',
   '/shop-preloader/image_1.png',
@@ -28,22 +30,77 @@ const SHOP_PRELOADER_IMAGES = [
   '/shop-preloader/image_7.png',
 ];
 
+/**
+ * Preloads and decodes an image into browser memory/cache
+ */
+function preloadSingleImage(src: string, timeoutMs: number = 4000): Promise<void> {
+  return new Promise((resolve) => {
+    if (!src) {
+      resolve();
+      return;
+    }
+    const img = new Image();
+    let settled = false;
+
+    const timer = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        resolve();
+      }
+    }, timeoutMs);
+
+    const onFinish = () => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        if ('decode' in img && typeof img.decode === 'function') {
+          img.decode().catch(() => {}).finally(() => resolve());
+        } else {
+          resolve();
+        }
+      }
+    };
+
+    img.onload = onFinish;
+    img.onerror = () => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timer);
+        resolve();
+      }
+    };
+    img.src = src;
+  });
+}
+
+/**
+ * Preloads a batch of URLs with controlled concurrency
+ */
+async function preloadBatch(urls: string[], concurrency: number = 6, timeoutMs: number = 4000): Promise<void> {
+  const uniqueUrls = Array.from(new Set(urls.filter(Boolean)));
+  if (uniqueUrls.length === 0) return;
+
+  let index = 0;
+  const worker = async () => {
+    while (index < uniqueUrls.length) {
+      const currentIndex = index++;
+      const url = uniqueUrls[currentIndex];
+      await preloadSingleImage(url, timeoutMs);
+    }
+  };
+
+  const pool = Array.from({ length: Math.min(concurrency, uniqueUrls.length) }, () => worker());
+  await Promise.allSettled(pool);
+}
+
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
-    const minDisplayTime = 4200; // Increased by 2 seconds (was 2.2s -> now 4.2s)
+    const minDisplayTime = 4200; // 4.2 seconds minimum luxury display time
     const startTime = Date.now();
-
-    // Collect landing models, shop preloader lookbook images, and catalog hero images to preload
-    const productImages = PRODUCTS.slice(0, 24).map((p) => p.image);
-    const allImagesToPreload = Array.from(
-      new Set([...LANDING_IMAGES, ...SHOP_PRELOADER_IMAGES, ...productImages])
-    );
-
-    let loadedCount = 0;
-    const total = allImagesToPreload.length;
+    let essentialLoaded = false;
 
     const tryFinish = () => {
       if (!isMounted) return;
@@ -59,29 +116,43 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       }, remaining);
     };
 
-    if (total === 0) {
-      tryFinish();
-      return;
-    }
+    // Sequential Order-wise Preloading Pipeline:
+    // 1. Landing -> 2. Shop Preloader -> 3. Catalog Products -> 4. Gallery Images
+    const runOrderWisePreload = async () => {
+      try {
+        // --- ORDER 1: Landing Page Hero Models & Drops ---
+        await preloadBatch(LANDING_IMAGES, 9, 3000);
 
-    // Proactively download and decode all landing and shop preloader images into browser cache
-    allImagesToPreload.forEach((src) => {
-      const img = new Image();
-      const onDone = () => {
-        loadedCount++;
-        if (loadedCount >= total) {
+        // --- ORDER 2: Shop Lookbook Transition Photos ---
+        await preloadBatch(SHOP_PRELOADER_IMAGES, 8, 3000);
+
+        // First essential tiers are fully loaded and cached in memory
+        essentialLoaded = true;
+        tryFinish();
+
+        // --- ORDER 3: Entire Product Catalog Primary Card Images (54 items) ---
+        const primaryCatalogImages = PRODUCTS.map((p) => p.image);
+        await preloadBatch(primaryCatalogImages, 6, 3500);
+
+        // --- ORDER 4: High-Res Alternate Angles, Back Views & Detail Galleries ---
+        const primarySet = new Set(primaryCatalogImages);
+        const galleryImages = PRODUCTS.flatMap((p) => p.gallery || []).filter((url) => !primarySet.has(url));
+        await preloadBatch(galleryImages, 6, 3500);
+      } catch (err) {
+        console.warn('Preload pipeline caught error:', err);
+      } finally {
+        if (!essentialLoaded) {
           tryFinish();
         }
-      };
-      img.onload = onDone;
-      img.onerror = onDone;
-      img.src = src;
-    });
+      }
+    };
 
-    // Fallback maximum safety timeout (5.5s max)
+    runOrderWisePreload();
+
+    // Fallback maximum safety timeout (6s max)
     const maxTimer = setTimeout(() => {
       tryFinish();
-    }, 5500);
+    }, 6000);
 
     return () => {
       isMounted = false;
