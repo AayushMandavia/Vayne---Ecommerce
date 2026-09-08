@@ -77,7 +77,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[99999] flex flex-col justify-between items-center select-none px-6 py-12 bg-white transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-[99999] flex flex-col justify-center items-center select-none px-6 py-12 bg-white transition-opacity duration-500 ease-out ${
         isExiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
       style={{
@@ -87,13 +87,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       {/* Soft Monochrome Ambient Radial Glow */}
       <div className="ambient-glow top-1/2 left-1/2" />
 
-      {/* Subtle Top Anchor */}
-      <header className="w-full max-w-sm flex items-center justify-center z-10 pt-2 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.45em] text-neutral-400">
-        <span>ARCHIVE LOOKBOOK</span>
-      </header>
-
       {/* Center Focal Typography: Luxury Editorial VAYNE with Baseline Dots */}
-      <main className="relative z-10 flex flex-col items-center justify-center my-auto transition-transform duration-500">
+      <main className="relative z-10 flex flex-col items-center justify-center transition-transform duration-500">
         <div className="flex items-end justify-center tracking-normal text-center">
           <h1 className="font-luxury-editorial text-black select-none brand-hero pl-[0.22em] leading-none">
             VAYNE
@@ -107,13 +102,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           </div>
         </div>
       </main>
-
-      {/* Minimal Footer */}
-      <footer className="w-full max-w-sm z-10 pb-4 flex flex-col items-center text-center">
-        <span className="text-[10px] font-mono tracking-[0.3em] uppercase text-neutral-300">
-          PARIS • TOKYO • NEW YORK
-        </span>
-      </footer>
     </div>
   );
 }
