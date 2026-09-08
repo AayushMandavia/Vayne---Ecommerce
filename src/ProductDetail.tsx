@@ -25,6 +25,50 @@ interface ProductDetailProps {
   onOpenAccount?: () => void;
 }
 
+interface ProductInspectionAngle {
+  id: string;
+  index: string;
+  name: string;
+  description: string;
+  scale: number;
+  origin: string;
+}
+
+const INSPECTION_ANGLES: ProductInspectionAngle[] = [
+  {
+    id: 'front',
+    index: '01',
+    name: 'Full Silhouette',
+    description: 'Front profile & total drape',
+    scale: 1,
+    origin: 'center center',
+  },
+  {
+    id: 'fabric',
+    index: '02',
+    name: 'Fabric & Weave',
+    description: 'Macro textile texture detail',
+    scale: 1.5,
+    origin: 'center 45%',
+  },
+  {
+    id: 'tailoring',
+    index: '03',
+    name: 'Collar & Seams',
+    description: 'Precision seam & neckline finish',
+    scale: 1.5,
+    origin: 'center 20%',
+  },
+  {
+    id: 'drape',
+    index: '04',
+    name: 'Drape & Hem',
+    description: 'Lower silhouette & proportion',
+    scale: 1.4,
+    origin: 'center 75%',
+  },
+];
+
 export default function ProductDetail({
   product,
   cartCount,
@@ -37,7 +81,7 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || '');
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[1] || product.sizes[0] || 'M');
-  const [activeImage, setActiveImage] = useState<string>(product.image);
+  const [activeAngleId, setActiveAngleId] = useState<string>('front');
   const [showAddedToast, setShowAddedToast] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>('fabric');
@@ -46,7 +90,7 @@ export default function ProductDetail({
 
   // Update selected product state if product changes
   useEffect(() => {
-    setActiveImage(product.image);
+    setActiveAngleId('front');
     setSelectedColor(product.colors[0]?.id || '');
     setSelectedSize(product.sizes[1] || product.sizes[0] || 'M');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -78,8 +122,10 @@ export default function ProductDetail({
     setTimeout(() => setShowAddedToast(false), 2000);
   };
 
-  // Related products from the same or adjacent categories
-  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id && (p.category === product.category || true)).slice(0, 4);
+  // Strictly filter related products from the exact same category
+  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
+
+  const currentAngle = INSPECTION_ANGLES.find((a) => a.id === activeAngleId) || INSPECTION_ANGLES[0];
 
   return (
     <div
@@ -189,17 +235,27 @@ export default function ProductDetail({
             {/* Primary Image: 4:5 aspect ratio, #F3F4F6 background, 1px border */}
             <div className="relative aspect-[4/5] bg-[#F3F4F6] border border-[#E5E7EB] overflow-hidden rounded-[2px] group">
               <img
-                src={activeImage}
-                alt={product.name}
-                className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
+                src={product.image}
+                alt={`${product.name} - ${currentAngle.name}`}
+                className="w-full h-full object-cover transition-all duration-700 ease-out"
+                style={{
+                  transform: `scale(${currentAngle.scale})`,
+                  transformOrigin: currentAngle.origin,
+                }}
               />
+
+              {/* Angle Indicator Tag */}
+              <div className="absolute bottom-4 left-4 px-3 py-1.5 bg-white/95 backdrop-blur-sm border border-[#E5E7EB] rounded-[2px] shadow-sm flex items-center gap-2 text-[#111827]">
+                <span className="font-mono text-[10px] font-bold tracking-wider">{currentAngle.index}</span>
+                <span className="text-[11px] font-medium uppercase tracking-wider">{currentAngle.name}</span>
+                <span className="text-[10px] text-[#6B7280] hidden sm:inline">• {currentAngle.description}</span>
+              </div>
 
               {/* Status Badge */}
               {product.status && (
                 <div className="absolute top-4 left-4">
                   {product.status === 'NEW ARRIVAL' ? (
-                    <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px]">
+                    <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px] shadow-sm">
                       NEW ARRIVAL
                     </span>
                   ) : (
@@ -211,29 +267,40 @@ export default function ProductDetail({
               )}
             </div>
 
-            {/* 2x2 Grid of Supporting 4:5 Images */}
-            <div className="grid grid-cols-2 gap-4">
-              {product.gallery.map((imgUrl, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setActiveImage(imgUrl)}
-                  className={`relative aspect-[4/5] bg-[#F3F4F6] border overflow-hidden rounded-[2px] group cursor-pointer text-left transition-all ${
-                    activeImage === imgUrl ? 'border-[#111827] ring-1 ring-[#111827]' : 'border-[#E5E7EB]'
-                  }`}
-                >
-                  <img
-                    src={imgUrl}
-                    alt={`${product.name} detail ${idx + 1}`}
-                    loading="lazy"
-                    className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1)' }}
-                  />
-                  <div className="absolute bottom-2 left-2 px-1.5 py-0.5 bg-white/90 text-[10px] font-mono uppercase text-[#111827] rounded-[2px]">
-                    0{idx + 1}
-                  </div>
-                </button>
-              ))}
+            {/* 4 Dedicated Inspection Angles for THIS exact product */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {INSPECTION_ANGLES.map((angle) => {
+                const isSelected = activeAngleId === angle.id;
+                return (
+                  <button
+                    key={angle.id}
+                    type="button"
+                    onClick={() => setActiveAngleId(angle.id)}
+                    className={`relative aspect-[4/5] bg-[#F3F4F6] border overflow-hidden rounded-[2px] group cursor-pointer text-left transition-all ${
+                      isSelected
+                        ? 'border-[#111827] ring-2 ring-[#111827]'
+                        : 'border-[#E5E7EB] hover:border-[#111827]'
+                    }`}
+                  >
+                    <img
+                      src={product.image}
+                      alt={`${product.name} ${angle.name}`}
+                      loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      style={{
+                        transform: `scale(${angle.scale === 1 ? 1 : 1.25})`,
+                        transformOrigin: angle.origin,
+                      }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 text-white">
+                      <div className="flex items-center justify-between text-[10px] font-mono">
+                        <span className="font-bold">{angle.index}</span>
+                        <span className="uppercase text-[9px] tracking-wider opacity-90 truncate ml-1">{angle.name}</span>
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

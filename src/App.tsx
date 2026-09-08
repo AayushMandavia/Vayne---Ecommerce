@@ -51,12 +51,12 @@ const DROPS: Drop[] = [
     copy: 'Soft layers, strong proportions. Off-shoulder ribbed knit top with tiered white flounce ruffle skirt.',
   },
   {
-    src: '/landing/men-3.png',
-    bg: '#40B165',
+    src: '/landing/men-2.png',
+    bg: '#DFCAA0',
     title: 'DROP 05',
-    subtitle: 'OLIVE UTILITY SHIRT',
+    subtitle: 'SAND LINEN ATELIER',
     category: 'MEN',
-    copy: 'Garment-dyed military field overshirt layered over relaxed washed dark denim.',
+    copy: 'Everyday essentials with an oversized fit and tailored fluid linen drape in desert sand.',
   },
   {
     src: '/landing/kid-2.png',
@@ -75,12 +75,12 @@ const DROPS: Drop[] = [
     copy: 'Cropped technical wind jacket and relaxed parachute trousers tailored in fluid powder sky blue.',
   },
   {
-    src: '/landing/men-2.png',
-    bg: '#DFCAA0',
+    src: '/landing/men-3.png',
+    bg: '#40B165',
     title: 'DROP 08',
-    subtitle: 'SAND LINEN ATELIER',
+    subtitle: 'OLIVE UTILITY SHIRT',
     category: 'MEN',
-    copy: 'Everyday essentials with an oversized fit and tailored fluid linen drape in desert sand.',
+    copy: 'Garment-dyed military field overshirt layered over relaxed washed dark denim.',
   },
   {
     src: '/landing/kid-3.png',
