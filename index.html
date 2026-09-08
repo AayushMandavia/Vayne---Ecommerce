@@ -9,6 +9,26 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=satoshi@400,500,700&f[]=switzer@400,500,600,700&display=swap" rel="stylesheet" />
+    <script>
+      (function() {
+        function purgeNetlifyBadge() {
+          var s = document.querySelector('script[data-nf-variant], script[src*="/.netlify/scripts/hud"]');
+          if (s) {
+            if (s.dataset) delete s.dataset.nfVariant;
+            s.remove();
+          }
+          var frames = document.querySelectorAll('#nl-badge-frame, #nl-hud-frame, iframe[title*="Netlify"], iframe[title*="Powered by Netlify"]');
+          frames.forEach(function(f) { f.remove(); });
+        }
+        purgeNetlifyBadge();
+        var obs = new MutationObserver(purgeNetlifyBadge);
+        if (document.documentElement) {
+          obs.observe(document.documentElement, { childList: true, subtree: true });
+        }
+        window.addEventListener('DOMContentLoaded', purgeNetlifyBadge);
+        window.addEventListener('load', purgeNetlifyBadge);
+      })();
+    </script>
   </head>
   <body class="bg-black select-none overflow-hidden m-0 p-0">
     <div id="root"></div>

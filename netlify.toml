@@ -3,6 +3,12 @@
   publish = "dist"
 
 [[redirects]]
+  from = "/.netlify/scripts/*"
+  to = "/empty.js"
+  status = 200
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200

@@ -32,3 +32,23 @@
   background-color: #e5e7eb;
   border-radius: 20px;
 }
+
+/* Netlify Injected Badge / HUD Suppression */
+#nl-badge-frame,
+#nl-hud-frame,
+iframe[id^="nl-"],
+iframe[title*="Netlify"],
+iframe[src*="netlify"],
+iframe[srcdoc*="netlify"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  z-index: -999999 !important;
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: circle(0) !important;
+}
+
