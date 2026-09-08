@@ -30,42 +30,32 @@ interface ProductInspectionAngle {
   index: string;
   name: string;
   description: string;
-  scale: number;
-  origin: string;
 }
 
 const INSPECTION_ANGLES: ProductInspectionAngle[] = [
   {
     id: 'front',
     index: '01',
-    name: 'Full Silhouette',
+    name: 'Front View',
     description: 'Front profile & total drape',
-    scale: 1,
-    origin: 'center center',
   },
   {
-    id: 'fabric',
+    id: 'back',
     index: '02',
-    name: 'Fabric & Weave',
-    description: 'Macro textile texture detail',
-    scale: 1.5,
-    origin: 'center 45%',
+    name: 'Back View',
+    description: 'Back silhouette & design',
   },
   {
-    id: 'tailoring',
+    id: 'profile',
     index: '03',
-    name: 'Collar & Seams',
-    description: 'Precision seam & neckline finish',
-    scale: 1.5,
-    origin: 'center 20%',
+    name: 'Side Profile',
+    description: 'Lateral drape & tailoring',
   },
   {
-    id: 'drape',
+    id: 'detail',
     index: '04',
-    name: 'Drape & Hem',
-    description: 'Lower silhouette & proportion',
-    scale: 1.4,
-    origin: 'center 75%',
+    name: 'Detail & Fabric',
+    description: 'Macro textile & finish',
   },
 ];
 
@@ -81,7 +71,7 @@ export default function ProductDetail({
 }: ProductDetailProps) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]?.id || '');
   const [selectedSize, setSelectedSize] = useState<string>(product.sizes[1] || product.sizes[0] || 'M');
-  const [activeAngleId, setActiveAngleId] = useState<string>('front');
+  const [activeAngleIndex, setActiveAngleIndex] = useState<number>(0);
   const [showAddedToast, setShowAddedToast] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>('fabric');
@@ -90,7 +80,7 @@ export default function ProductDetail({
 
   // Update selected product state if product changes
   useEffect(() => {
-    setActiveAngleId('front');
+    setActiveAngleIndex(0);
     setSelectedColor(product.colors[0]?.id || '');
     setSelectedSize(product.sizes[1] || product.sizes[0] || 'M');
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -125,7 +115,13 @@ export default function ProductDetail({
   // Strictly filter related products from the exact same category
   const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id && p.category === product.category).slice(0, 4);
 
-  const currentAngle = INSPECTION_ANGLES.find((a) => a.id === activeAngleId) || INSPECTION_ANGLES[0];
+  const galleryImages =
+    product.gallery && product.gallery.length >= 4
+      ? product.gallery
+      : [product.image, ...(product.gallery || [])];
+
+  const currentAngle = INSPECTION_ANGLES[activeAngleIndex] || INSPECTION_ANGLES[0];
+  const currentImage = galleryImages[activeAngleIndex] || product.image;
 
   return (
     <div
@@ -235,13 +231,10 @@ export default function ProductDetail({
             {/* Primary Image: 4:5 aspect ratio, #F3F4F6 background, 1px border */}
             <div className="relative aspect-[4/5] bg-[#F3F4F6] border border-[#E5E7EB] overflow-hidden rounded-[2px] group">
               <img
-                src={product.image}
+                key={currentImage}
+                src={currentImage}
                 alt={`${product.name} - ${currentAngle.name}`}
-                className="w-full h-full object-cover transition-all duration-700 ease-out"
-                style={{
-                  transform: `scale(${currentAngle.scale})`,
-                  transformOrigin: currentAngle.origin,
-                }}
+                className="w-full h-full object-cover transition-opacity duration-300 ease-out"
               />
 
               {/* Angle Indicator Tag */}
@@ -267,15 +260,16 @@ export default function ProductDetail({
               )}
             </div>
 
-            {/* 4 Dedicated Inspection Angles for THIS exact product */}
+            {/* 4 Dedicated Multi-Angle Views for THIS exact garment */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {INSPECTION_ANGLES.map((angle) => {
-                const isSelected = activeAngleId === angle.id;
+              {INSPECTION_ANGLES.map((angle, idx) => {
+                const isSelected = activeAngleIndex === idx;
+                const thumbImage = galleryImages[idx] || product.image;
                 return (
                   <button
                     key={angle.id}
                     type="button"
-                    onClick={() => setActiveAngleId(angle.id)}
+                    onClick={() => setActiveAngleIndex(idx)}
                     className={`relative aspect-[4/5] bg-[#F3F4F6] border overflow-hidden rounded-[2px] group cursor-pointer text-left transition-all ${
                       isSelected
                         ? 'border-[#111827] ring-2 ring-[#111827]'
@@ -283,14 +277,10 @@ export default function ProductDetail({
                     }`}
                   >
                     <img
-                      src={product.image}
+                      src={thumbImage}
                       alt={`${product.name} ${angle.name}`}
                       loading="lazy"
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      style={{
-                        transform: `scale(${angle.scale === 1 ? 1 : 1.25})`,
-                        transformOrigin: angle.origin,
-                      }}
                     />
                     <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-2 text-white">
                       <div className="flex items-center justify-between text-[10px] font-mono">
