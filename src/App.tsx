@@ -733,25 +733,18 @@ export default function App() {
           <button
             type="button"
             onClick={handleOpenShop}
-            className="flex items-center gap-2 sm:gap-3 text-white no-underline select-none transition-opacity duration-200 cursor-pointer bg-transparent border-0 p-0"
+            className="group flex items-center gap-2.5 sm:gap-3.5 text-white no-underline select-none cursor-pointer border-2 border-white rounded-full px-5 py-2 sm:px-7 sm:py-3 md:px-8 md:py-3.5 bg-transparent backdrop-blur-sm transition-all duration-200 ease-out hover:bg-white hover:text-black hover:scale-105 active:scale-95 shadow-sm"
             style={{
               fontFamily: "'Anton', sans-serif",
-              fontSize: 'clamp(20px, 4vw, 56px)',
+              fontSize: 'clamp(20px, 3.2vw, 40px)',
               fontWeight: 400,
-              opacity: 0.95,
-              letterSpacing: '-0.02em',
+              letterSpacing: '-0.01em',
               lineHeight: 1,
               textTransform: 'uppercase',
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = '0.95';
-            }}
           >
             <span>SHOP</span>
-            <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8" strokeWidth={2.25} />
+            <ArrowRight className="w-5 h-5 sm:w-7 sm:h-7 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.25} />
           </button>
         </div>
 
