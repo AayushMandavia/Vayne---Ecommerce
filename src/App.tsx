@@ -856,9 +856,9 @@ export default function App() {
             </header>
 
             {/* Editorial Content */}
-            <main className="flex-grow flex flex-col justify-between max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-6 sm:pt-12 md:pt-16 pb-12 sm:pb-20">
+            <main className="flex-grow flex flex-col justify-start sm:justify-between max-w-7xl mx-auto w-full px-5 sm:px-6 md:px-12 pt-5 sm:pt-12 md:pt-16 pb-8 sm:pb-20">
               {/* Hero Title */}
-              <section className="mb-4 sm:mb-12 md:mb-16">
+              <section className="mb-6 sm:mb-12 md:mb-16">
                 <h1
                   className="text-3xl sm:text-7xl lg:text-8xl tracking-tight text-black uppercase"
                   style={{
@@ -886,7 +886,7 @@ export default function App() {
                         setSelectedCategory(category.id as CategoryId);
                         setShopFlow('catalog');
                       }}
-                      className={`group py-4 sm:py-10 md:py-14 px-2 sm:px-4 block cursor-pointer transition-all duration-300 ${
+                      className={`group py-6 sm:py-10 md:py-14 px-1 sm:px-4 block cursor-pointer transition-all duration-300 ${
                         isSelected ? 'bg-neutral-50' : 'hover:bg-black/[0.015]'
                       }`}
                     >
