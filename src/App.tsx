@@ -812,16 +812,10 @@ export default function App() {
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                         {/* Department Title & Silhouette (Matches Editorial Signage) */}
                         <div className="flex items-center gap-5 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-out group-hover:translate-x-3 sm:group-hover:translate-x-4">
-                          <div className="shrink-0 flex items-center justify-center text-black">
-                            {category.id === 'men' && (
-                              <SilhouetteMen className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
-                            )}
-                            {category.id === 'women' && (
-                              <SilhouetteWomen className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
-                            )}
-                            {category.id === 'kids' && (
-                              <SilhouetteKids className="w-7 sm:w-10 lg:w-12 h-14 sm:h-20 lg:h-24 text-black" />
-                            )}
+                          <div className="shrink-0 flex items-center justify-center">
+                            {category.id === 'men' && <SilhouetteMen />}
+                            {category.id === 'women' && <SilhouetteWomen />}
+                            {category.id === 'kids' && <SilhouetteKids />}
                           </div>
 
                           <h2
