@@ -149,7 +149,7 @@ export default function ShopPreloader({ onComplete }: ShopPreloaderProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] flex flex-col items-center justify-between select-none antialiased transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-[120] flex flex-col items-center justify-between select-none antialiased transition-opacity duration-500 ease-out ${
         isExiting ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}
       style={{

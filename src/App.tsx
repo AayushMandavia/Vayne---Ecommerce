@@ -426,15 +426,15 @@ export default function App() {
     };
   }, [navigate, shopFlow]);
 
-  // Trigger shop flow: show rapid multi-fashion lookbook preloader before entering categories
+  // Trigger shop flow: mount category page immediately underneath and show lookbook preloader
   const handleOpenShop = () => {
+    setSelectedCategory(null);
+    setShopFlow('category-select');
     setShowShopPreloader(true);
   };
 
   const handleShopPreloaderComplete = () => {
     setShowShopPreloader(false);
-    setSelectedCategory(null);
-    setShopFlow('category-select');
   };
 
   // Derive role for each model index
