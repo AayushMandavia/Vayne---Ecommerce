@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { ArrowLeft, ArrowRight, ArrowUpRight, Shuffle } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Shuffle, ShoppingBag, User } from 'lucide-react';
 import CollectionCatalog from './CollectionCatalog';
 import ProductDetail from './ProductDetail';
 import CartDrawer, { type CartItem, type RecommendedProduct } from './CartDrawer';
@@ -460,8 +460,8 @@ export default function App() {
           opacity: 1,
           zIndex: 20,
           left: '50%',
-          height: isMobile ? '74%' : '93%',
-          bottom: isMobile ? '12%' : '0',
+          height: isMobile ? '68%' : '93%',
+          bottom: isMobile ? '16%' : '0',
           transition: baseTransition,
           willChange: 'transform, filter, opacity',
           pointerEvents: 'none',
@@ -472,10 +472,10 @@ export default function App() {
           aspectRatio: '0.6 / 1',
           transform: 'translateX(-50%)',
           filter: 'blur(2px)',
-          opacity: 0.75,
+          opacity: isMobile ? 0.35 : 0.75,
           zIndex: 10,
-          left: isMobile ? '12%' : '18%',
-          height: isMobile ? '18%' : '26%',
+          left: isMobile ? '8%' : '18%',
+          height: isMobile ? '15%' : '26%',
           bottom: isMobile ? '38%' : '28%',
           transition: baseTransition,
           willChange: 'transform, filter, opacity',
@@ -487,10 +487,10 @@ export default function App() {
           aspectRatio: '0.6 / 1',
           transform: 'translateX(-50%)',
           filter: 'blur(2px)',
-          opacity: 0.75,
+          opacity: isMobile ? 0.35 : 0.75,
           zIndex: 10,
-          left: isMobile ? '88%' : '82%',
-          height: isMobile ? '18%' : '26%',
+          left: isMobile ? '92%' : '82%',
+          height: isMobile ? '15%' : '26%',
           bottom: isMobile ? '38%' : '28%',
           transition: baseTransition,
           willChange: 'transform, filter, opacity',
@@ -505,7 +505,7 @@ export default function App() {
           opacity: 0,
           zIndex: 5,
           left: '50%',
-          height: isMobile ? '14%' : '20%',
+          height: isMobile ? '12%' : '20%',
           bottom: isMobile ? '38%' : '28%',
           transition: baseTransition,
           willChange: 'transform, filter, opacity',
@@ -530,7 +530,36 @@ export default function App() {
         overscrollBehavior: 'none',
       }}
     >
-      <div className="relative w-full h-screen overflow-hidden">
+      <div className="relative w-full h-[100dvh] min-h-[100dvh] sm:h-screen overflow-hidden">
+        {/* 0. Mobile Top Header (Clean Minimalist Luxury Anchor, hidden on desktop) */}
+        <header className="sm:hidden absolute top-0 inset-x-0 z-40 px-5 pt-4 pb-2 flex items-center justify-between text-white pointer-events-auto">
+          <div className="flex items-center gap-2">
+            <span
+              className="font-bold tracking-[0.22em] text-sm uppercase text-white"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              VAYNE
+            </span>
+            <span className="text-white/40 text-[10px] font-mono tracking-widest uppercase">/ 2026</span>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 text-white hover:opacity-80 transition-opacity cursor-pointer"
+              aria-label="Open Cart"
+            >
+              <ShoppingBag className="w-5 h-5 text-white" strokeWidth={1.8} />
+              {cartItems.reduce((acc, i) => acc + i.quantity, 0) > 0 && (
+                <span className="absolute top-0.5 right-0.5 w-4 h-4 bg-white text-black text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm">
+                  {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+                </span>
+              )}
+            </button>
+          </div>
+        </header>
+
         {/* 1. Grain overlay */}
         <div
           className="absolute inset-0 pointer-events-none"
@@ -548,9 +577,9 @@ export default function App() {
           className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none"
           style={{
             zIndex: 2,
-            top: '9%',
+            top: isMobile ? '8%' : '9%',
             fontFamily: "'Anton', sans-serif",
-            fontSize: 'clamp(90px, min(25vw, 40vh), 360px)',
+            fontSize: 'clamp(80px, min(25vw, 40vh), 360px)',
             fontWeight: 400,
             color: '#FFFFFF',
             opacity: 1,
@@ -585,26 +614,26 @@ export default function App() {
           })}
         </div>
 
-        {/* 4. Bottom-left text + nav buttons */}
+        {/* 4. Bottom controls */}
         <div
-          className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 md:bottom-10 md:left-12 lg:left-16"
+          className="absolute bottom-5 left-4 right-4 sm:right-auto sm:bottom-8 sm:left-8 md:bottom-10 md:left-12 lg:left-16"
           style={{
             zIndex: 60,
-            maxWidth: '380px',
+            maxWidth: isMobile ? 'none' : '380px',
           }}
         >
           {/* Category Pill & Counter */}
           <div
-            className="flex items-center gap-2.5 mb-2 sm:mb-2.5"
+            className="flex items-center gap-2.5 mb-1.5 sm:mb-2.5"
             style={{
               opacity: swapping ? 0 : 1,
               transition: 'opacity 200ms ease',
             }}
           >
-            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] font-semibold px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white">
+            <span className="text-[10px] sm:text-xs font-mono uppercase tracking-[0.2em] font-semibold px-2 sm:px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur-sm text-white">
               {currentDrop.category || 'COLLECTION'}
             </span>
-            <span className="text-xs font-mono tracking-widest text-white/80">
+            <span className="text-[11px] sm:text-xs font-mono tracking-widest text-white/80">
               {String(textIndex + 1).padStart(2, '0')} / {String(DROPS.length).padStart(2, '0')}
             </span>
           </div>
@@ -618,21 +647,21 @@ export default function App() {
             }}
           >
             <p
-              className="uppercase font-bold text-lg sm:text-[24px] text-white leading-tight"
+              className="uppercase font-bold text-base sm:text-[24px] text-white leading-tight"
               style={{
                 letterSpacing: '0.02em',
               }}
             >
               {currentDrop.title}
               {currentDrop.subtitle && (
-                <span className="font-normal text-xs sm:text-sm text-white/85 ml-2 block sm:inline">
+                <span className="font-normal text-xs sm:text-sm text-white/85 ml-1.5 sm:ml-2 inline">
                   • {currentDrop.subtitle}
                 </span>
               )}
             </p>
           </div>
 
-          {/* Drop Description */}
+          {/* Drop Description (Desktop only) */}
           <p
             className="hidden sm:block text-xs sm:text-sm text-white mb-3 sm:mb-4"
             style={{
@@ -654,81 +683,103 @@ export default function App() {
                 aria-label={`Go to drop ${idx + 1}`}
                 className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer border-0 p-0 ${
                   idx === activeIndex
-                    ? 'w-6 bg-white'
+                    ? 'w-5 sm:w-6 bg-white'
                     : 'w-1.5 bg-white/40 hover:bg-white/70'
                 }`}
               />
             ))}
           </div>
 
-          {/* Nav Buttons */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
-            <button
-              type="button"
-              onClick={() => navigate('prev')}
-              aria-label="Previous drop"
-              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
-              style={{
-                backgroundColor: 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.style.transform = 'scale(1.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.25} />
-            </button>
+          {/* Action Row: Nav Buttons & Mobile Inline SHOP CTA */}
+          <div className="flex items-center justify-between gap-3 sm:justify-start">
+            <div className="flex items-center gap-2 sm:gap-3.5">
+              <button
+                type="button"
+                onClick={() => navigate('prev')}
+                aria-label="Previous drop"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.transform = 'scale(1.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <ArrowLeft className="w-4 h-4 sm:w-6 sm:h-6" strokeWidth={2.25} />
+              </button>
 
-            <button
-              type="button"
-              onClick={handleRandom}
-              aria-label="Random drop"
-              title="Random drop"
-              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white/80 text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
-              style={{
-                backgroundColor: 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.style.transform = 'scale(1.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <Shuffle className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={2.25} />
-            </button>
+              <button
+                type="button"
+                onClick={handleRandom}
+                aria-label="Random drop"
+                title="Random drop"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white/80 text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.transform = 'scale(1.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <Shuffle className="w-3.5 h-3.5 sm:w-5 sm:h-5" strokeWidth={2.25} />
+              </button>
 
-            <button
-              type="button"
-              onClick={() => navigate('next')}
-              aria-label="Next drop"
-              className="w-11 h-11 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
-              style={{
-                backgroundColor: 'transparent',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.style.transform = 'scale(1.08)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.25} />
-            </button>
+              <button
+                type="button"
+                onClick={() => navigate('next')}
+                aria-label="Next drop"
+                className="w-10 h-10 sm:w-14 sm:h-14 rounded-full flex items-center justify-center border-2 border-white text-white cursor-pointer transition-all duration-150 ease-out hover:scale-105 active:scale-95"
+                style={{
+                  backgroundColor: 'transparent',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.transform = 'scale(1.08)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <ArrowRight className="w-4 h-4 sm:w-6 sm:h-6" strokeWidth={2.25} />
+              </button>
+            </div>
+
+            {/* Mobile-Only Integrated SHOP Button */}
+            <div className="sm:hidden">
+              <button
+                type="button"
+                onClick={handleOpenShop}
+                className="group flex items-center gap-2 text-white no-underline select-none cursor-pointer border-2 border-white rounded-full px-4 py-2 bg-transparent backdrop-blur-sm transition-all duration-200 ease-out hover:bg-white hover:text-black active:scale-95 shadow-sm"
+                style={{
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: '20px',
+                  fontWeight: 400,
+                  letterSpacing: '-0.01em',
+                  lineHeight: 1,
+                  textTransform: 'uppercase',
+                }}
+              >
+                <span>SHOP</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.25} />
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* 5. Bottom-right CTA "SHOP →" */}
+        {/* 5. Desktop-only Bottom-right CTA "SHOP →" (Keeps desktop 100% untouched) */}
         <div
-          className="absolute bottom-6 right-6 sm:bottom-8 sm:right-8 md:bottom-10 md:right-12 lg:right-16"
+          className="hidden sm:block absolute sm:bottom-8 sm:right-8 md:bottom-10 md:right-12 lg:right-16"
           style={{ zIndex: 60 }}
         >
           <button
@@ -758,28 +809,58 @@ export default function App() {
             className="fixed inset-0 z-[100] flex flex-col bg-white text-black min-h-screen font-sans selection:bg-black selection:text-white antialiased overflow-y-auto"
             style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif" }}
           >
-            {/* Top Bar (No back or close button — reload site to return to landing page) */}
-            <header className="w-full border-b border-neutral-200 sticky top-0 bg-white/95 backdrop-blur-sm z-50 px-6 sm:px-12 py-5 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="font-bold tracking-[0.2em] text-base text-black">
+            {/* Top Bar with Navigation Back to Lookbook + Cart & Account Access */}
+            <header className="w-full border-b border-neutral-200 sticky top-0 bg-white/95 backdrop-blur-sm z-50 px-4 sm:px-12 py-3 sm:py-5 flex items-center justify-between">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShopFlow('idle')}
+                  className="flex items-center gap-1.5 text-black hover:opacity-75 transition-opacity cursor-pointer mr-1 sm:mr-3 py-1 px-2 -ml-1.5 rounded hover:bg-black/5"
+                  title="Return to Lookbook"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span className="text-[11px] sm:text-xs font-mono uppercase tracking-wider">LOOKBOOK</span>
+                </button>
+                <span className="font-bold tracking-[0.2em] text-sm sm:text-base text-black hidden xs:inline">
                   VAYNE
                 </span>
-                <span className="text-neutral-300">/</span>
-                <span className="text-xs uppercase tracking-[0.16em] text-neutral-500 font-mono">
+                <span className="text-neutral-300 hidden sm:inline">/</span>
+                <span className="text-xs uppercase tracking-[0.16em] text-neutral-500 font-mono hidden sm:inline">
                   SELECT DEPARTMENT
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsAccountOpen(true)}
+                  className="p-1 text-black hover:opacity-70 transition-opacity cursor-pointer"
+                  aria-label="Account"
+                >
+                  <User className="w-4 h-4 sm:w-5 sm:h-5" strokeWidth={1.75} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsCartOpen(true)}
+                  className="relative cursor-pointer p-1 text-black hover:opacity-70 transition-opacity"
+                  aria-label="Shopping Bag"
+                >
+                  <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-black" strokeWidth={1.75} />
+                  {cartItems.reduce((acc, i) => acc + i.quantity, 0) > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-black text-white text-[10px] font-bold flex items-center justify-center rounded-full">
+                      {cartItems.reduce((acc, i) => acc + i.quantity, 0)}
+                    </span>
+                  )}
+                </button>
               </div>
             </header>
 
             {/* Editorial Content */}
-            <main className="flex-grow flex flex-col justify-between max-w-7xl mx-auto w-full px-6 md:px-12 pt-12 md:pt-16 pb-20">
+            <main className="flex-grow flex flex-col justify-between max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-12 pt-6 sm:pt-12 md:pt-16 pb-12 sm:pb-20">
               {/* Hero Title */}
-              <section className="mb-12 md:mb-16">
+              <section className="mb-4 sm:mb-12 md:mb-16">
                 <h1
-                  className="text-5xl sm:text-7xl lg:text-8xl tracking-tight text-black uppercase"
+                  className="text-3xl sm:text-7xl lg:text-8xl tracking-tight text-black uppercase"
                   style={{
                     fontFamily: "'Anton', sans-serif",
                     letterSpacing: '-0.015em',
@@ -805,13 +886,13 @@ export default function App() {
                         setSelectedCategory(category.id as CategoryId);
                         setShopFlow('catalog');
                       }}
-                      className={`group py-10 md:py-14 px-2 sm:px-4 block cursor-pointer transition-all duration-300 ${
+                      className={`group py-4 sm:py-10 md:py-14 px-2 sm:px-4 block cursor-pointer transition-all duration-300 ${
                         isSelected ? 'bg-neutral-50' : 'hover:bg-black/[0.015]'
                       }`}
                     >
-                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 sm:gap-6">
                         {/* Department Title & Silhouette (Matches Editorial Signage) */}
-                        <div className="flex items-center gap-5 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-out group-hover:translate-x-3 sm:group-hover:translate-x-4">
+                        <div className="flex items-center gap-4 sm:gap-8 lg:gap-10 transition-transform duration-300 ease-out group-hover:translate-x-3 sm:group-hover:translate-x-4">
                           <div className="shrink-0 flex items-center justify-center">
                             {category.id === 'men' && <SilhouetteMen />}
                             {category.id === 'women' && <SilhouetteWomen />}
@@ -819,7 +900,7 @@ export default function App() {
                           </div>
 
                           <h2
-                            className="text-6xl sm:text-8xl lg:text-9xl text-black"
+                            className="text-4xl sm:text-8xl lg:text-9xl text-black"
                             style={{
                               fontFamily: "'Anton', sans-serif",
                               letterSpacing: '-0.015em',
@@ -832,24 +913,24 @@ export default function App() {
                         </div>
 
                         {/* Metadata & Interactive Arrow */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between lg:justify-end gap-6 sm:gap-14 lg:w-1/2">
+                        <div className="flex items-center justify-between lg:justify-end gap-4 sm:gap-14 lg:w-1/2">
                           <div className="max-w-xs sm:max-w-sm">
-                            <p className="text-xs font-mono uppercase tracking-wider text-neutral-500 mb-1.5 font-medium">
+                            <p className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-neutral-500 mb-0.5 sm:mb-1.5 font-medium">
                               {category.count}
                             </p>
-                            <p className="text-sm md:text-base text-neutral-800 leading-relaxed font-normal">
+                            <p className="text-xs sm:text-sm md:text-base text-neutral-800 leading-snug sm:leading-relaxed font-normal">
                               {category.tagline}
                             </p>
                           </div>
 
                           <div
-                            className={`w-12 h-12 rounded-full border transition-all duration-300 ease-out flex items-center justify-center shrink-0 self-start sm:self-center ${
+                            className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border transition-all duration-300 ease-out flex items-center justify-center shrink-0 self-center ${
                               isSelected
                                 ? 'bg-black text-white border-black translate-x-1.5 -translate-y-1.5 shadow-md'
                                 : 'border-neutral-300 text-neutral-700 group-hover:bg-black group-hover:text-white group-hover:border-black group-hover:translate-x-1.5 group-hover:-translate-y-1.5'
                             }`}
                           >
-                            <ArrowUpRight className="w-5 h-5 transition-transform duration-200" strokeWidth={2} />
+                            <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-200" strokeWidth={2} />
                           </div>
                         </div>
                       </div>
@@ -860,7 +941,7 @@ export default function App() {
 
               {/* Selection Feedback */}
               {selectedCategory && (
-                <div className="mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl bg-black text-white animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="mt-8 sm:mt-12 flex flex-col sm:flex-row items-center justify-between gap-4 p-4 sm:p-6 rounded-2xl bg-black text-white animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div>
                     <p className="text-xs font-mono uppercase tracking-widest text-neutral-400 mb-1">
                       DEPARTMENT SELECTED

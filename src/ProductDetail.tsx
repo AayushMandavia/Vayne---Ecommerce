@@ -143,7 +143,8 @@ export default function ProductDetail({
               className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[#6B7280] hover:text-[#111827] transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Catalog</span>
+              <span className="hidden sm:inline">Back to Catalog</span>
+              <span className="sm:hidden">Catalog</span>
             </button>
           </div>
 
@@ -227,9 +228,9 @@ export default function ProductDetail({
           {/* ===================================================================== */}
           {/* LEFT COLUMN: Gallery (7 of 12 cols ~58%)                              */}
           {/* ===================================================================== */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-3 sm:space-y-4">
             {/* Primary Image: 4:5 aspect ratio, #F3F4F6 background, 1px border */}
-            <div className="relative aspect-[4/5] bg-[#F3F4F6] border border-[#E5E7EB] overflow-hidden rounded-[2px] group">
+            <div className="relative aspect-[4/5] max-h-[50vh] sm:max-h-none bg-[#F3F4F6] border border-[#E5E7EB] overflow-hidden rounded-[2px] group">
               <img
                 key={currentImage}
                 src={currentImage}
@@ -238,21 +239,21 @@ export default function ProductDetail({
               />
 
               {/* Angle Indicator Tag */}
-              <div className="absolute bottom-4 left-4 px-3 py-1.5 bg-white/95 backdrop-blur-sm border border-[#E5E7EB] rounded-[2px] shadow-sm flex items-center gap-2 text-[#111827]">
-                <span className="font-mono text-[10px] font-bold tracking-wider">{currentAngle.index}</span>
-                <span className="text-[11px] font-medium uppercase tracking-wider">{currentAngle.name}</span>
+              <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-white/95 backdrop-blur-sm border border-[#E5E7EB] rounded-[2px] shadow-sm flex items-center gap-2 text-[#111827]">
+                <span className="font-mono text-[9px] sm:text-[10px] font-bold tracking-wider">{currentAngle.index}</span>
+                <span className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider">{currentAngle.name}</span>
                 <span className="text-[10px] text-[#6B7280] hidden sm:inline">• {currentAngle.description}</span>
               </div>
 
               {/* Status Badge */}
               {product.status && (
-                <div className="absolute top-4 left-4">
+                <div className="absolute top-3 left-3 sm:top-4 sm:left-4">
                   {product.status === 'NEW ARRIVAL' ? (
-                    <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px] shadow-sm">
+                    <span className="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px] shadow-sm">
                       NEW ARRIVAL
                     </span>
                   ) : (
-                    <span className="text-[10px] font-bold tracking-wider uppercase px-2.5 py-1 bg-[#111827] text-white rounded-[2px]">
+                    <span className="text-[9px] sm:text-[10px] font-bold tracking-wider uppercase px-2 sm:px-2.5 py-0.5 sm:py-1 bg-[#111827] text-white rounded-[2px]">
                       SOLD OUT
                     </span>
                   )}
@@ -261,7 +262,7 @@ export default function ProductDetail({
             </div>
 
             {/* 4 Dedicated Multi-Angle Views for THIS exact garment */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-4 gap-2 sm:gap-3">
               {INSPECTION_ANGLES.map((angle, idx) => {
                 const isSelected = activeAngleIndex === idx;
                 const thumbImage = galleryImages[idx] || product.image;
@@ -669,7 +670,7 @@ export default function ProductDetail({
           showStickyBar ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
         }`}
       >
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-20 h-20 flex items-center justify-between">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 lg:px-20 h-auto py-3 sm:py-0 sm:h-20 flex items-center justify-between pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:pb-0">
           {/* Left: 48px square product thumbnail + Title/Variant text stack */}
           <div className="flex items-center gap-3.5 min-w-0">
             <img

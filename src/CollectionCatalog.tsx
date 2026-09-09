@@ -321,7 +321,7 @@ export default function CollectionCatalog({
       {/* ========================================================================= */}
       <div className="max-w-7xl mx-auto w-full px-6 lg:px-12 pt-8 pb-4">
         {/* Breadcrumb trail */}
-        <nav className="flex items-center gap-2 text-xs text-[#6B7280] tracking-wider uppercase mb-6">
+        <nav className="flex items-center gap-2 text-xs text-[#6B7280] tracking-wider uppercase mb-4 sm:mb-6">
           <button
             type="button"
             onClick={onBackToCategories}
@@ -335,6 +335,30 @@ export default function CollectionCatalog({
             {activeCategory}
           </span>
         </nav>
+
+        {/* Mobile Department Navigation Pills (hidden on desktop md:hidden) */}
+        <div className="flex md:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-4">
+          {(['men', 'women', 'kids'] as CategoryId[]).map((cat) => {
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                onClick={() => {
+                  setActiveCategory(cat);
+                  handleResetFilters();
+                }}
+                className={`px-3.5 py-1.5 rounded-full text-xs uppercase tracking-wider font-medium transition-all ${
+                  isActive
+                    ? 'bg-[#111827] text-white shadow-sm'
+                    : 'bg-[#F3F4F6] text-[#6B7280] hover:text-[#111827]'
+                }`}
+              >
+                {cat}
+              </button>
+            );
+          })}
+        </div>
 
         {/* Collection title and metadata bar */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-[#E5E7EB]">
@@ -601,7 +625,7 @@ export default function CollectionCatalog({
               </div>
             ) : (
               <div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-6">
                   {paginatedProducts.map((product) => {
                     const isAdded = addedProductId === product.id;
 
@@ -625,21 +649,21 @@ export default function CollectionCatalog({
 
                           {/* Status Badges */}
                           {product.status && (
-                            <div className="absolute top-3 left-3">
+                            <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
                               {product.status === 'NEW ARRIVAL' ? (
-                                <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px] shadow-sm">
+                                <span className="text-[8px] sm:text-[10px] font-bold tracking-wider uppercase px-1.5 sm:px-2 py-0.5 sm:py-1 bg-white text-[#111827] border border-[#E5E7EB] rounded-[2px] shadow-sm">
                                   NEW ARRIVAL
                                 </span>
                               ) : (
-                                <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-1 bg-[#111827] text-white rounded-[2px]">
+                                <span className="text-[8px] sm:text-[10px] font-bold tracking-wider uppercase px-1.5 sm:px-2 py-0.5 sm:py-1 bg-[#111827] text-white rounded-[2px]">
                                   SOLD OUT
                                 </span>
                               )}
                             </div>
                           )}
 
-                          {/* Quick Size Selector Grid overlay on bottom */}
-                          <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-white/95 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-between">
+                          {/* Quick Size Selector Grid overlay on bottom (desktop hover) */}
+                          <div className="hidden sm:flex absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-white/95 via-white/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center justify-between">
                             <div className="flex gap-1">
                               {product.sizes.slice(0, 4).map((s) => (
                                 <span
@@ -662,8 +686,8 @@ export default function CollectionCatalog({
                           {/* Added to Bag Toast inside card */}
                           {isAdded && (
                             <div className="absolute inset-0 bg-[#111827]/90 text-white flex flex-col items-center justify-center gap-2 animate-in fade-in duration-150 z-20">
-                              <Check className="w-6 h-6 text-white" />
-                              <span className="text-xs font-semibold uppercase tracking-wider">
+                              <Check className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                              <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
                                 Added to Bag
                               </span>
                             </div>
@@ -671,17 +695,17 @@ export default function CollectionCatalog({
                         </div>
 
                         {/* Product Meta details */}
-                        <div className="pt-4 flex flex-col gap-1">
+                        <div className="pt-2 sm:pt-4 flex flex-col gap-0.5 sm:gap-1">
                           <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-mono tracking-wider text-[#6B7280] uppercase">
+                            <span className="text-[9px] sm:text-[11px] font-mono tracking-wider text-[#6B7280] uppercase">
                               {product.type}
                             </span>
-                            <span className="text-xs font-semibold text-[#111827]">
+                            <span className="text-xs sm:text-xs font-semibold text-[#111827]">
                               {product.price}
                             </span>
                           </div>
 
-                          <h2 className="text-sm font-medium text-[#111827] group-hover:text-black transition-colors line-clamp-1">
+                          <h2 className="text-xs sm:text-sm font-medium text-[#111827] group-hover:text-black transition-colors line-clamp-1">
                             {product.name}
                           </h2>
 

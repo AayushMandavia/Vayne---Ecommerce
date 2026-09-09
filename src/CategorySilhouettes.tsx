@@ -6,7 +6,7 @@ interface SilhouetteProps {
  * Custom Bespoke Fashion Silhouette for MEN
  * Posed model wearing fedora hat and tailored trenchcoat
  */
-export function SilhouetteMen({ className = 'h-14 sm:h-20 lg:h-24 w-auto max-w-[60px] sm:max-w-[85px] lg:max-w-[100px]' }: SilhouetteProps) {
+export function SilhouetteMen({ className = 'h-11 sm:h-20 lg:h-24 w-auto max-w-[52px] sm:max-w-[85px] lg:max-w-[100px]' }: SilhouetteProps) {
   return (
     <img
       src="/silhouettes/men.png"
@@ -21,7 +21,7 @@ export function SilhouetteMen({ className = 'h-14 sm:h-20 lg:h-24 w-auto max-w-[
  * Custom Bespoke Fashion Silhouette for WOMEN
  * Sculptural couture model silhouette in cocktail dress
  */
-export function SilhouetteWomen({ className = 'h-14 sm:h-20 lg:h-24 w-auto max-w-[50px] sm:max-w-[70px] lg:max-w-[85px]' }: SilhouetteProps) {
+export function SilhouetteWomen({ className = 'h-11 sm:h-20 lg:h-24 w-auto max-w-[44px] sm:max-w-[70px] lg:max-w-[85px]' }: SilhouetteProps) {
   return (
     <img
       src="/silhouettes/women.png"
@@ -36,7 +36,7 @@ export function SilhouetteWomen({ className = 'h-14 sm:h-20 lg:h-24 w-auto max-w
  * Custom Bespoke Fashion Silhouette for KIDS
  * Stylized duo silhouette of boy and girl facing each other
  */
-export function SilhouetteKids({ className = 'h-14 sm:h-20 lg:h-24 w-auto max-w-[85px] sm:max-w-[120px] lg:max-w-[145px]' }: SilhouetteProps) {
+export function SilhouetteKids({ className = 'h-11 sm:h-20 lg:h-24 w-auto max-w-[75px] sm:max-w-[120px] lg:max-w-[145px]' }: SilhouetteProps) {
   return (
     <img
       src="/silhouettes/kids.png"

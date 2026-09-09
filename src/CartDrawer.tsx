@@ -142,7 +142,7 @@ export default function CartDrawer({
 
       {/* DRAWER CONTAINER */}
       <div
-        className={`absolute right-0 top-0 bottom-0 w-full max-w-[420px] bg-white h-full shadow-2xl flex flex-col border-l border-gray-200 transform transition-transform duration-300 ease-out z-10 ${
+        className={`absolute right-0 top-0 bottom-0 w-full max-w-full sm:max-w-[420px] bg-white h-full shadow-2xl flex flex-col border-l border-gray-200 transform transition-transform duration-300 ease-out z-10 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -321,7 +321,7 @@ export default function CartDrawer({
         {/* ===================================================================== */}
         {/* 4. FOOTER / CHECKOUT CTA                                              */}
         {/* ===================================================================== */}
-        <div className="bg-white border-t border-gray-200 p-6 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)] shrink-0">
+        <div className="bg-white border-t border-gray-200 p-5 sm:p-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.02)] shrink-0">
           <div className="flex justify-between items-center mb-2 text-sm">
             <span className="text-gray-500">Subtotal</span>
             <span className="font-semibold text-gray-900">${subtotal.toFixed(2)}</span>

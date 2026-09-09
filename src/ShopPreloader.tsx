@@ -11,6 +11,8 @@ interface LookbookCard {
   title: string;
   left: number; // percentage in 1366 coordinate space
   top: number;  // percentage in 768 coordinate space
+  mobileLeft: number; // percentage in mobile portrait coordinate space
+  mobileTop: number;
   delay: number; // ms when it pops in
   zIndex: number;
 }
@@ -24,6 +26,8 @@ const CARDS: LookbookCard[] = [
     title: 'Olive Utility Shirt',
     left: 22.987, // Center: (489, 246)
     top: 9.245,
+    mobileLeft: 6,
+    mobileTop: 4,
     delay: 180,
     zIndex: 10,
   },
@@ -34,6 +38,8 @@ const CARDS: LookbookCard[] = [
     title: 'Aero Sky Cargo',
     left: 1.318, // Center: (193, 294)
     top: 15.495,
+    mobileLeft: 50,
+    mobileTop: 10,
     delay: 330,
     zIndex: 11,
   },
@@ -44,6 +50,8 @@ const CARDS: LookbookCard[] = [
     title: 'Botanical Pinafore',
     left: 11.127, // Center: (327, 549)
     top: 48.698,
+    mobileLeft: 4,
+    mobileTop: 24,
     delay: 500,
     zIndex: 12,
   },
@@ -54,6 +62,8 @@ const CARDS: LookbookCard[] = [
     title: 'Sand Linen Atelier',
     left: 73.133, // Center: (1174, 555)
     top: 49.479,
+    mobileLeft: 52,
+    mobileTop: 32,
     delay: 670,
     zIndex: 13,
   },
@@ -64,6 +74,8 @@ const CARDS: LookbookCard[] = [
     title: 'Blush Peplum & Ruffle',
     left: 47.511, // Center: (824, 213)
     top: 4.948,
+    mobileLeft: 8,
+    mobileTop: 44,
     delay: 1000,
     zIndex: 14,
   },
@@ -74,6 +86,8 @@ const CARDS: LookbookCard[] = [
     title: 'Teddy Denim Overalls',
     left: 30.893, // Center: (597, 476)
     top: 39.193,
+    mobileLeft: 48,
+    mobileTop: 50,
     delay: 1170,
     zIndex: 15,
   },
@@ -84,6 +98,8 @@ const CARDS: LookbookCard[] = [
     title: 'Shadow Streetwear',
     left: 50.000, // Center: (858, 528)
     top: 45.964,
+    mobileLeft: 4,
+    mobileTop: 62,
     delay: 1330,
     zIndex: 16,
   },
@@ -94,6 +110,8 @@ const CARDS: LookbookCard[] = [
     title: 'Crimson Ruched Gown',
     left: 69.326, // Center: (1122, 264)
     top: 11.589,
+    mobileLeft: 50,
+    mobileTop: 64,
     delay: 1500,
     zIndex: 17,
   },
@@ -103,6 +121,15 @@ export default function ShopPreloader({ onComplete }: ShopPreloaderProps) {
   const [isExiting, setIsExiting] = useState(false);
   const [visibleIds, setVisibleIds] = useState<Set<string>>(new Set());
   const [progress, setProgress] = useState(0);
+  const [isMobile, setIsMobile] = useState(() => (typeof window !== 'undefined' ? window.innerWidth < 640 : false));
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const startTime = performance.now();
@@ -180,7 +207,7 @@ export default function ShopPreloader({ onComplete }: ShopPreloaderProps) {
 
       {/* Main Full-Bleed Canvas: Choreographed 8-Card Lookbook Collage on Pure White */}
       <main className="flex-1 w-full max-w-7xl mx-auto flex items-center justify-center px-4 sm:px-8 py-2 relative overflow-hidden bg-white">
-        <div className="relative w-full aspect-[1366/768] max-h-[78vh] bg-white">
+        <div className="relative w-full aspect-[3/4] sm:aspect-[1366/768] max-h-[70vh] sm:max-h-[78vh] bg-white">
           {CARDS.map((card) => {
             const isVisible = visibleIds.has(card.id);
 
@@ -193,10 +220,10 @@ export default function ShopPreloader({ onComplete }: ShopPreloaderProps) {
                     : 'opacity-0 scale-90 translate-y-3 pointer-events-none'
                 }`}
                 style={{
-                  left: `${card.left}%`,
-                  top: `${card.top}%`,
-                  width: '25.622%', // 350 / 1366
-                  height: '45.573%', // 350 / 768
+                  left: isMobile ? `${card.mobileLeft}%` : `${card.left}%`,
+                  top: isMobile ? `${card.mobileTop}%` : `${card.top}%`,
+                  width: isMobile ? '44%' : '25.622%', // Responsive on mobile portrait, 350 / 1366 on desktop
+                  height: isMobile ? '30%' : '45.573%', // Responsive on mobile portrait, 350 / 768 on desktop
                   zIndex: card.zIndex,
                   backgroundColor: '#ffffff',
                   border: '1px solid rgba(0, 0, 0, 0.06)',
