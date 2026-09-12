@@ -140,6 +140,23 @@ export default function App() {
   const [isAccountOpen, setIsAccountOpen] = useState(false);
   const [showInitialPreloader, setShowInitialPreloader] = useState(true);
   const [showShopPreloader, setShowShopPreloader] = useState(false);
+  const [showShoppingGuide, setShowShoppingGuide] = useState(false);
+
+  // Show "Start Shopping" curly arrow guide 2.5s after landing page appears (after preloader finishes)
+  useEffect(() => {
+    if (!showInitialPreloader && shopFlow === 'idle') {
+      const timer = setTimeout(() => {
+        setShowShoppingGuide(true);
+      }, 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showInitialPreloader, shopFlow]);
+
+  // Auto-rotate mode (engages within 1s after user stops scrolling, then cycles every 5s)
+  const lastActivityTime = useRef(Date.now());
+  const hasAutoRotatedAfterScroll = useRef(false);
+  const isUserInteracting = useRef(false);
+  const lastPointerPos = useRef({ x: 0, y: 0 });
 
   // Scroll & swipe/drag gesture tracking on landing page
   const lastScrollTime = useRef(0);
@@ -238,6 +255,7 @@ export default function App() {
   const navigate = useCallback((direction: 'next' | 'prev') => {
     if (isAnimating) return;
 
+    lastActivityTime.current = Date.now();
     setIsAnimating(true);
     const total = DROPS.length;
     const nextIdx = direction === 'next' ? (activeIndex + 1) % total : (activeIndex + total - 1) % total;
@@ -259,6 +277,8 @@ export default function App() {
   const jumpToIndex = useCallback((targetIdx: number) => {
     if (isAnimating || targetIdx === activeIndex) return;
 
+    lastActivityTime.current = Date.now();
+    hasAutoRotatedAfterScroll.current = false;
     setIsAnimating(true);
     setActiveIndex(targetIdx);
 
@@ -275,6 +295,9 @@ export default function App() {
 
   const handleRandom = useCallback(() => {
     if (isAnimating) return;
+
+    lastActivityTime.current = Date.now();
+    hasAutoRotatedAfterScroll.current = false;
     setIsAnimating(true);
     let nextIdx = Math.floor(Math.random() * DROPS.length);
     while (nextIdx === activeIndex && DROPS.length > 1) {
@@ -292,6 +315,119 @@ export default function App() {
       setIsAnimating(false);
     }, 650);
   }, [activeIndex, isAnimating]);
+
+  const navigateRef = useRef(navigate);
+  useEffect(() => {
+    navigateRef.current = navigate;
+  }, [navigate]);
+
+  // Auto-rotate mode effect: within 1s after user stops scrolling, it engages auto mode and cycles every 5s
+  useEffect(() => {
+    if (
+      shopFlow !== 'idle' ||
+      showInitialPreloader ||
+      showShopPreloader ||
+      isCartOpen ||
+      isAccountOpen
+    ) {
+      return;
+    }
+
+    // Reset inactivity timer and auto-mode flag when entering landing page / when preloader completes
+    lastActivityTime.current = Date.now();
+    hasAutoRotatedAfterScroll.current = false;
+
+    const handleUserScrollOrInteraction = () => {
+      lastActivityTime.current = Date.now();
+      hasAutoRotatedAfterScroll.current = false;
+    };
+
+    const handleTouchStart = () => {
+      isUserInteracting.current = true;
+      lastActivityTime.current = Date.now();
+      hasAutoRotatedAfterScroll.current = false;
+    };
+
+    const handleTouchEnd = () => {
+      isUserInteracting.current = false;
+      lastActivityTime.current = Date.now();
+      hasAutoRotatedAfterScroll.current = false;
+    };
+
+    const handlePointerDown = () => {
+      isUserInteracting.current = true;
+      lastActivityTime.current = Date.now();
+      hasAutoRotatedAfterScroll.current = false;
+    };
+
+    const handlePointerUp = () => {
+      isUserInteracting.current = false;
+      lastActivityTime.current = Date.now();
+      hasAutoRotatedAfterScroll.current = false;
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const dx = Math.abs(e.clientX - lastPointerPos.current.x);
+      const dy = Math.abs(e.clientY - lastPointerPos.current.y);
+      if (dx > 8 || dy > 8) {
+        lastPointerPos.current = { x: e.clientX, y: e.clientY };
+        lastActivityTime.current = Date.now();
+        hasAutoRotatedAfterScroll.current = false;
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        lastActivityTime.current = Date.now();
+        hasAutoRotatedAfterScroll.current = false;
+      }
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
+    window.addEventListener('pointerup', handlePointerUp, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleUserScrollOrInteraction, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
+    window.addEventListener('wheel', handleUserScrollOrInteraction, { passive: true });
+    window.addEventListener('keydown', handleUserScrollOrInteraction, { passive: true });
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    const interval = setInterval(() => {
+      if (document.hidden) return;
+      if (isUserInteracting.current || isPointerDown.current) return;
+
+      const idleDuration = Date.now() - lastActivityTime.current;
+      // Within 1 second (1000ms) after user stops scrolling: auto mode activates!
+      // Once in auto mode: rotates every 5 seconds (5000ms)!
+      const requiredDelay = hasAutoRotatedAfterScroll.current ? 5000 : 1000;
+
+      if (idleDuration >= requiredDelay) {
+        hasAutoRotatedAfterScroll.current = true;
+        lastActivityTime.current = Date.now();
+        navigateRef.current('next');
+      }
+    }, 100);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleUserScrollOrInteraction);
+      window.removeEventListener('touchend', handleTouchEnd);
+      window.removeEventListener('wheel', handleUserScrollOrInteraction);
+      window.removeEventListener('keydown', handleUserScrollOrInteraction);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [
+    shopFlow,
+    showInitialPreloader,
+    showShopPreloader,
+    isCartOpen,
+    isAccountOpen,
+  ]);
 
   // Keyboard navigation (ArrowLeft / ArrowRight only when in showcase landing page)
   useEffect(() => {
@@ -799,6 +935,60 @@ export default function App() {
             <ArrowRight className="w-5 h-5 sm:w-7 sm:h-7 transition-transform duration-200 group-hover:translate-x-1" strokeWidth={2.25} />
           </button>
         </div>
+
+        {/* 5b. Hand-Drawn "Start Shopping" Arrow Guide (Purely visual indicator, points down into SHOP button) */}
+        {showShoppingGuide && shopFlow === 'idle' && (
+          <div
+            className="absolute z-[65] pointer-events-none select-none transition-all animate-guide-enter"
+            style={{
+              bottom: isMobile ? '106px' : 'clamp(125px, 18vh, 165px)',
+              right: isMobile ? '16px' : 'clamp(32px, 5.2vw, 84px)',
+            }}
+          >
+            <div className="animate-guide-float flex flex-col items-center select-none">
+              {/* Text: Start Shopping (Visual indicator only) */}
+              <span
+                className="text-white text-2xl sm:text-3xl md:text-4xl font-bold tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.55)] whitespace-nowrap"
+                style={{
+                  fontFamily: "'Caveat', cursive",
+                  lineHeight: 1,
+                  display: 'inline-block',
+                  transform: 'rotate(-2deg)',
+                }}
+              >
+                Start Shopping
+              </span>
+
+              {/* Hand-Drawn Solid White Curly Loop Arrow - perfectly aligned pointer */}
+              <svg
+                className="w-16 h-20 sm:w-20 sm:h-24 md:w-24 md:h-28 text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.6)] mt-1"
+                viewBox="0 0 100 140"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="3.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {/* Curly loop stem - smoothly enters straight down along central axis */}
+                <path
+                  d="M 58 8 C 68 24, 70 42, 60 56 C 50 70, 42 56, 44 42 C 46 28, 62 26, 68 42 C 74 58, 64 76, 56 94 C 48 108, 45 115, 45 124"
+                  stroke="white"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                {/* Symmetrical hand-drawn arrowhead pointing straight down */}
+                <path
+                  d="M 32 108 L 45 124 L 58 108"
+                  stroke="white"
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
 
 
         {/* ========================================================================= */}

@@ -125,4 +125,50 @@ iframe[srcdoc*="netlify"] {
 .dot-3 { animation-delay: 0.44s; }
 .dot-4 { animation-delay: 0.66s; }
 
+/* Start Shopping hand-drawn guide animations */
+@keyframes guideFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes guideFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+.animate-guide-float {
+  animation: guideFloat 3.4s ease-in-out infinite;
+}
+
+.animate-guide-enter {
+  animation: guideFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Animated flowing dotted arrow */
+@keyframes flowDottedArrow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -24;
+  }
+}
+
+.animate-flow-dots {
+  stroke-dasharray: 0 12;
+  stroke-linecap: round;
+  animation: flowDottedArrow 1.2s linear infinite;
+}
+
+
 
